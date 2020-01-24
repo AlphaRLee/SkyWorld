@@ -1,0 +1,9 @@
+name: Sky World
+version: ${project.version}
+api-version: 1.15
+main: io.github.alpharlee.skyworld.SkyWorld
+prefix: SkyWorld
+load: STARTUP
+authors: [AlphaRLee]
+description: A Sky world generator
+website: https://github.com/AlphaRLee
