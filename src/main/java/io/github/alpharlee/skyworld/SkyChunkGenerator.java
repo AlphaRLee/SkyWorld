@@ -1,8 +1,10 @@
 package io.github.alpharlee.skyworld;
 
+import io.github.alpharlee.skyworld.populator.TreePopulator;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
+import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.util.noise.SimplexNoiseGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
@@ -10,6 +12,8 @@ import org.bukkit.util.noise.SimplexOctaveGenerator;
 import java.util.*;
 
 public class SkyChunkGenerator extends ChunkGenerator {
+	public static final int CHUNK_SIZE = 16;
+
 	// TODO Delete these debuggers
 	public static LinkedHashMap<String, Double> TEST_VAL = new LinkedHashMap<>();
 	static {
@@ -38,7 +42,6 @@ public class SkyChunkGenerator extends ChunkGenerator {
 		floorGenerator.setScale(TEST_VAL.get("fs"));
 
 		// Double for loop to get all 256 blocks of surface
-		int CHUNK_SIZE = 16;
 		double variation = TEST_VAL.get("var");
 		double base = TEST_VAL.get("base");
 
@@ -107,10 +110,6 @@ public class SkyChunkGenerator extends ChunkGenerator {
 		return voidBiomes.contains(biome);
 	}
 
-	private double sigmoid(double x) {
-		return (1 / ( 1 + Math.pow(Math.E, (-1 * x))));
-	}
-
 	private void populateColumnBlocks(ChunkData chunk, int x, int y, int z, int floorHeight) {
 		Material[] surfaceMaterials = {Material.GRASS_BLOCK, Material.DIRT, Material.DIRT};
 
@@ -124,5 +123,10 @@ public class SkyChunkGenerator extends ChunkGenerator {
 
 			y--;
 		}
+	}
+
+	@Override
+	public List<BlockPopulator> getDefaultPopulators(World world) {
+		return Arrays.asList((BlockPopulator) new TreePopulator());
 	}
 }
