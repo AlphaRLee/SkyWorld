@@ -1,5 +1,6 @@
 package io.github.alpharlee.skyworld.populator;
 
+import io.github.alpharlee.skyworld.BiomeCalculator;
 import io.github.alpharlee.skyworld.SkyChunkGenerator;
 import io.github.alpharlee.skyworld.biomedata.TreeBiomeData;
 import org.bukkit.Chunk;
@@ -9,10 +10,7 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.generator.BlockPopulator;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class TreePopulator extends BlockPopulator {
 	HashMap<Biome, TreeBiomeData> treeBiomeDataLookup;
@@ -96,25 +94,31 @@ public class TreePopulator extends BlockPopulator {
 
 	@Override
 	public void populate(World world, Random random, Chunk chunk) {
-		if (!random.nextBoolean()) {
+		Biome biome = BiomeCalculator.getAverageBiome(chunk);
+		TreeBiomeData treeBiomeData = treeBiomeDataLookup.get(biome);
+		if (treeBiomeData == null) {
 			return;
 		}
 
-		int maxTreeCount = 5;
-		int treeAmount = random.nextInt(maxTreeCount) + 1;
+		// Spawn probability test. Must be lower than the spawn probability to appear
+		if (random.nextDouble() > treeBiomeData.getSpawnProbability()) {
+			return;
+		}
 
+		int treeAmount = random.nextInt(treeBiomeData.getMaxDensity() - treeBiomeData.getMinDensity()) + treeBiomeData.getMinDensity();
 		for (int i = 0; i < treeAmount; i++) {
-			placeTree(world, random, chunk);
+			placeTree(world, random, chunk, treeBiomeData);
 		}
 	}
 
-	private void placeTree(World world, Random random, Chunk chunk) {
+	private void placeTree(World world, Random random, Chunk chunk, TreeBiomeData treeBiomeData) {
 		int x = random.nextInt(SkyChunkGenerator.CHUNK_SIZE);
 		int z = random.nextInt(SkyChunkGenerator.CHUNK_SIZE);
 		int y = world.getMaxHeight() - 1;
 		boolean isValidPosition = false;
 		while (!isValidPosition && y > 0) {
-			isValidPosition = chunk.getBlock(x, y - 1, z).getType() != Material.GRASS_BLOCK;
+			Material type = chunk.getBlock(x, y - 1, z).getType();
+			isValidPosition = type == Material.GRASS_BLOCK || type == Material.DIRT;
 			y--;
 		}
 
@@ -122,6 +126,8 @@ public class TreePopulator extends BlockPopulator {
 			return;
 		}
 
-		world.generateTree(chunk.getBlock(x, y, z).getLocation(), TreeType.TREE);
+		List<TreeType> treeTypes = treeBiomeData.getTreeTypes();
+		TreeType randTreeType = treeTypes.get(random.nextInt(treeTypes.size()));
+		world.generateTree(chunk.getBlock(x, y, z).getLocation(), randTreeType);
 	}
 }
