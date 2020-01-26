@@ -16,8 +16,8 @@ public class BiomeCalculator {
 	public static Biome getAverageBiome(Chunk chunk) {
 		Map<Biome, Integer> biomeCounts = new HashMap<>(2);
 
-		for (int x = chunk.getX() * SkyChunkGenerator.CHUNK_SIZE; x < (chunk.getX() + 1) * SkyChunkGenerator.CHUNK_SIZE; x++) {
-			for (int z = chunk.getZ() * SkyChunkGenerator.CHUNK_SIZE; z < (chunk.getZ() + 1) * SkyChunkGenerator.CHUNK_SIZE; z++) {
+		for (int x = 0; x < SkyChunkGenerator.CHUNK_SIZE; x++) {
+			for (int z = 0; z < SkyChunkGenerator.CHUNK_SIZE; z++) {
 				Biome biome = chunk.getBlock(x, 64, z).getBiome();
 				if (biomeCounts.containsKey(biome)) {
 					biomeCounts.put(biome, biomeCounts.get(biome) + 1);
