@@ -20,27 +20,27 @@ public class TreePopulator extends BlockPopulator {
 		addTreeEntry(Biome.PLAINS, 1, 5, 0.2, TreeType.TREE, TreeType.BIG_TREE, TreeType.BIRCH);
 		addTreeEntry(Biome.MOUNTAINS, 1, 5, 0.2, TreeType.REDWOOD, TreeType.TALL_REDWOOD, TreeType.TREE, TreeType.BIG_TREE);
 
-		TreeBiomeData forestData = new TreeBiomeData(6, 12, TreeType.TREE, TreeType.BIG_TREE, TreeType.BIRCH);
+		TreeBiomeData forestData = new TreeBiomeData(2, 8, TreeType.TREE, TreeType.BIG_TREE, TreeType.BIRCH);
 		addTreeEntry(Biome.FOREST, forestData);
 		addTreeEntry(Biome.WOODED_HILLS, forestData);
 		addTreeEntry(Biome.WOODED_MOUNTAINS, forestData);
 
-		TreeBiomeData taigaData = new TreeBiomeData(6, 12, TreeType.REDWOOD, TreeType.TALL_REDWOOD);
+		TreeBiomeData taigaData = new TreeBiomeData(2, 8, TreeType.REDWOOD, TreeType.TALL_REDWOOD);
 		addTreeEntry(Biome.TAIGA, taigaData);
 		addTreeEntry(Biome.TAIGA_HILLS, taigaData);
 		addTreeEntry(Biome.TAIGA_MOUNTAINS, taigaData);
 		addTreeEntry(Biome.SNOWY_TAIGA_HILLS, taigaData);
 		addTreeEntry(Biome.SNOWY_TAIGA_MOUNTAINS, taigaData);
 
-		TreeBiomeData swampData = new TreeBiomeData(5, 11, 0.7, TreeType.SWAMP, TreeType.TREE);
+		TreeBiomeData swampData = new TreeBiomeData(1, 6, 0.7, TreeType.SWAMP, TreeType.TREE);
 		addTreeEntry(Biome.SWAMP, swampData);
 		addTreeEntry(Biome.SWAMP_HILLS, swampData);
 
-		TreeBiomeData mushroomData = new TreeBiomeData(1, 6, 0.7, TreeType.RED_MUSHROOM, TreeType.BROWN_MUSHROOM);
+		TreeBiomeData mushroomData = new TreeBiomeData(1, 3, 0.7, TreeType.RED_MUSHROOM, TreeType.BROWN_MUSHROOM);
 		addTreeEntry(Biome.MUSHROOM_FIELDS, mushroomData);
 		addTreeEntry(Biome.MUSHROOM_FIELD_SHORE, mushroomData);
 
-		TreeBiomeData jungleData = new TreeBiomeData(8, 16, TreeType.TREE, TreeType.JUNGLE, TreeType.JUNGLE_BUSH, TreeType.SMALL_JUNGLE, TreeType.COCOA_TREE);
+		TreeBiomeData jungleData = new TreeBiomeData(4, 9, TreeType.TREE, TreeType.JUNGLE, TreeType.JUNGLE_BUSH, TreeType.SMALL_JUNGLE, TreeType.COCOA_TREE);
 		addTreeEntry(Biome.JUNGLE, jungleData);
 		addTreeEntry(Biome.JUNGLE_HILLS, jungleData);
 		addTreeEntry(Biome.MODIFIED_JUNGLE, jungleData);
@@ -48,31 +48,31 @@ public class TreePopulator extends BlockPopulator {
 		addTreeEntry(Biome.JUNGLE_EDGE, 1, 6, TreeType.TREE, TreeType.JUNGLE_BUSH, TreeType.SMALL_JUNGLE, TreeType.COCOA_TREE);
 		addTreeEntry(Biome.MODIFIED_JUNGLE_EDGE, 1, 6, TreeType.TREE, TreeType.JUNGLE_BUSH, TreeType.SMALL_JUNGLE, TreeType.COCOA_TREE);
 
-		TreeBiomeData birchData = new TreeBiomeData(6, 12, TreeType.BIRCH);
+		TreeBiomeData birchData = new TreeBiomeData(3, 8, TreeType.BIRCH);
 		addTreeEntry(Biome.BIRCH_FOREST, birchData);
 		addTreeEntry(Biome.BIRCH_FOREST_HILLS, birchData);
 
-		TreeBiomeData tallBirchData = new TreeBiomeData(6, 12, TreeType.BIRCH, TreeType.TALL_BIRCH);
+		TreeBiomeData tallBirchData = new TreeBiomeData(3, 8, TreeType.BIRCH, TreeType.TALL_BIRCH);
 		addTreeEntry(Biome.BIRCH_FOREST, tallBirchData);
 		addTreeEntry(Biome.BIRCH_FOREST_HILLS, tallBirchData);
 
-		TreeBiomeData darkForestData = new TreeBiomeData(4, 8, TreeType.TREE, TreeType.DARK_OAK, TreeType.BROWN_MUSHROOM, TreeType.TREE.RED_MUSHROOM);
+		TreeBiomeData darkForestData = new TreeBiomeData(2, 6, TreeType.TREE, TreeType.DARK_OAK, TreeType.BROWN_MUSHROOM, TreeType.TREE.RED_MUSHROOM);
 		addTreeEntry(Biome.DARK_FOREST, darkForestData);
 		addTreeEntry(Biome.DARK_FOREST_HILLS, darkForestData);
 
-		TreeBiomeData giantTaigaData = new TreeBiomeData(1, 12, TreeType.REDWOOD, TreeType.TALL_REDWOOD, TreeType.MEGA_REDWOOD);
+		TreeBiomeData giantTaigaData = new TreeBiomeData(2, 8, TreeType.REDWOOD, TreeType.TALL_REDWOOD, TreeType.MEGA_REDWOOD);
 		addTreeEntry(Biome.GIANT_TREE_TAIGA, giantTaigaData);
 		addTreeEntry(Biome.GIANT_TREE_TAIGA_HILLS, giantTaigaData);
 		addTreeEntry(Biome.GIANT_SPRUCE_TAIGA, giantTaigaData);
 		addTreeEntry(Biome.GIANT_SPRUCE_TAIGA_HILLS, giantTaigaData);
 
-		TreeBiomeData savannaData = new TreeBiomeData(1, 6, 0.4, TreeType.ACACIA);
+		TreeBiomeData savannaData = new TreeBiomeData(1, 4, 0.4, TreeType.ACACIA);
 		addTreeEntry(Biome.SAVANNA, savannaData);
 		addTreeEntry(Biome.SAVANNA_PLATEAU, savannaData);
 		addTreeEntry(Biome.SHATTERED_SAVANNA, savannaData);
 		addTreeEntry(Biome.SHATTERED_SAVANNA_PLATEAU, savannaData);
 
-		addTreeEntry(Biome.FLOWER_FOREST, 1, 8, 0.8, TreeType.TREE, TreeType.BIRCH);
+		addTreeEntry(Biome.FLOWER_FOREST, 1, 6, 0.8, TreeType.TREE, TreeType.BIRCH);
 
 		TreeBiomeData bambooJungleData = new TreeBiomeData(3, 9, 0.6, TreeType.JUNGLE, TreeType.SMALL_JUNGLE);
 		addTreeEntry(Biome.BAMBOO_JUNGLE, bambooJungleData);
@@ -107,8 +107,13 @@ public class TreePopulator extends BlockPopulator {
 
 		int treeAmount = random.nextInt(treeBiomeData.getMaxDensity() - treeBiomeData.getMinDensity()) + treeBiomeData.getMinDensity();
 		int lastTopY = world.getMaxHeight() - 1;
-		for (int i = 0; i < treeAmount; i++) {
+		int failCount = 0;
+		int maxFailCount = 4;
+		for (int i = 0; i < treeAmount && failCount < maxFailCount; i++) {
 			lastTopY = placeTree(world, random, chunk, treeBiomeData, lastTopY);
+			if (lastTopY == world.getMaxHeight() - 1) {
+				failCount++;
+			}
 		}
 	}
 

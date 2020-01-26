@@ -62,7 +62,7 @@ public class SkyChunkGenerator extends ChunkGenerator {
 				populateColumnBlocks(chunk, x, currentHeight, z, floorHeight);
 			}
 		}
-
+		
 		return chunk;
 	}
 
