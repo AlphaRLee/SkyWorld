@@ -77,15 +77,15 @@ public class SkyChunkGenerator implements BaseChunkGenerator {
 	}
 
 	private void populateColumnBlocks(ChunkData chunk, int x, int y, int z, int floorHeight) {
-		Material[] surfaceMaterials = {Material.GRASS_BLOCK, Material.DIRT, Material.DIRT};
+//		Material[] surfaceMaterials = {Material.GRASS_BLOCK, Material.DIRT, Material.DIRT};
 
 		int i = 0;
 		while (y > floorHeight && y > 0) {
-			if (i < surfaceMaterials.length) {
-				chunk.setBlock(x, y, z, surfaceMaterials[i++]);
-			} else {
+//			if (i < surfaceMaterials.length) {
+//				chunk.setBlock(x, y, z, surfaceMaterials[i++]);
+//			} else {
 				chunk.setBlock(x, y, z, Material.STONE);
-			}
+//			}
 
 			y--;
 		}
