@@ -63,6 +63,10 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>rutger-repo</id>
+            <url>http://rutgerkok.nl/repo</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -71,6 +75,12 @@
             <artifactId>spigot-api</artifactId>
             <version>1.15.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>nl.rutgerkok</groupId>
+            <artifactId>worldgeneratorapi</artifactId>
+            <version>0.2</version>
+            <scope>provided</scope> <!-- Important, otherwise WorldGeneratorApi will be placed in your JAR file if you're using maven-shade-plugin -->
         </dependency>
     </dependencies>
 </project>

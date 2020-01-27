@@ -1,12 +1,13 @@
 package io.github.alpharlee.skyworld;
 
+import nl.rutgerkok.worldgeneratorapi.WorldGeneratorApi;
+import nl.rutgerkok.worldgeneratorapi.WorldRef;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -35,7 +36,15 @@ public final class SkyWorld extends JavaPlugin {
 	@Override
 	public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
 		// TODO Add id as parameter (make customizable terrain settings)
-		return new SkyChunkGenerator();
+//		return new SkyChunkGenerator();
+
+		int worldGeneratorApiVersionMajor = 0;
+		int worldGeneratorApiVersionMinor = 4;
+		return WorldGeneratorApi.getInstance(this, worldGeneratorApiVersionMajor, worldGeneratorApiVersionMinor)
+				.createCustomGenerator(WorldRef.ofName(worldName), generator -> {
+					generator.setBaseChunkGenerator(new SkyChunkGenerator(generator.getWorld()));
+					getLogger().info("Enabling SkyWorld generator for world " + worldName);
+				});
 	}
 
 	@Override

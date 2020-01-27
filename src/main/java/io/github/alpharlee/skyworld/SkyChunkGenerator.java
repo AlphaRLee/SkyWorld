@@ -1,17 +1,19 @@
 package io.github.alpharlee.skyworld;
 
-import io.github.alpharlee.skyworld.populator.TreePopulator;
+import nl.rutgerkok.worldgeneratorapi.BaseChunkGenerator;
+import nl.rutgerkok.worldgeneratorapi.WorldRef;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Biome;
-import org.bukkit.generator.BlockPopulator;
-import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.util.noise.SimplexNoiseGenerator;
+import org.bukkit.generator.ChunkGenerator.ChunkData;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Random;
 
-public class SkyChunkGenerator extends ChunkGenerator {
+/**
+ * SkyChunkGenerator depending on WorldGeneratorApi
+ */
+public class SkyChunkGenerator implements BaseChunkGenerator {
 	public static final int CHUNK_SIZE = 16;
 
 	// TODO Delete these debuggers
@@ -33,9 +35,20 @@ public class SkyChunkGenerator extends ChunkGenerator {
 		TEST_VAL.put("fbase", 20D);
 	}
 
+	private final World world;
+
+	public SkyChunkGenerator(World world) {
+		this.world = world;
+	}
+
+	/**
+	 * Sets the basic blocks (air, stone and water usually) in the chunk. No
+	 * decorations are applied yet.
+	 *
+	 * @param chunk The chunk.
+	 */
 	@Override
-	public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biomeGrid) {
-		ChunkData chunk = createChunkData(world);
+	public void setBlocksInChunk(GeneratingChunk chunk) {
 		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), (int) Math.floor(TEST_VAL.get("co")));
 		SimplexOctaveGenerator floorGenerator = new SimplexOctaveGenerator(new Random(world.getSeed() >> 1), (int) Math.floor(TEST_VAL.get("fo")));
 		generator.setScale(TEST_VAL.get("cs"));
@@ -50,64 +63,17 @@ public class SkyChunkGenerator extends ChunkGenerator {
 		// Double for loop to get all 256 blocks of surface
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
-//				if (isVoidBiome(getAverageBiome(biomeGrid, x, z, 5))) {
-//					continue;
-//				}
+
+				int chunkX = chunk.getChunkX();
+				int chunkZ = chunk.getChunkZ();
 
 				int currentHeight = (int) (generator.noise(chunkX * CHUNK_SIZE + x, chunkZ * CHUNK_SIZE + z, TEST_VAL.get("cf"), TEST_VAL.get("ca"), true) * variation + base);
 				double floorRand = floorGenerator.noise(chunkX * CHUNK_SIZE + x, chunkZ * CHUNK_SIZE + z, TEST_VAL.get("ff"), TEST_VAL.get("fa"), true);
-//				int floorHeight = (int) (sigmoid(8D * (floorRand + 0.2)) * floorVariationMax + floorBase);
 				int floorHeight = (int) (floorRand * floorVariationMax + floorBase);
 
-				populateColumnBlocks(chunk, x, currentHeight, z, floorHeight);
+				populateColumnBlocks(chunk.getBlocksForChunk(), x, currentHeight, z, floorHeight);
 			}
 		}
-		
-		return chunk;
-	}
-
-	private Biome getAverageBiome(BiomeGrid biomeGrid, int x, int z, int sampleLength) {
-		Map<Biome, Integer> biomeCounts = new HashMap<>(2);
-
-		sampleLength = sampleLength % 2 == 1 ? sampleLength : sampleLength + 1; // Force sampleLength to be first odd number >= sampleLength
-		for (int i = x - sampleLength / 2; i <= x + sampleLength / 2; i++) {
-			for (int j = z - sampleLength / 2; j <= z + sampleLength / 2; j++) {
-				Biome biome = biomeGrid.getBiome(i, 64, j);
-				if (biomeCounts.containsKey(biome)) {
-					biomeCounts.put(biome, biomeCounts.get(biome) + 1);
-				} else {
-					biomeCounts.put(biome, 1);
-				}
-			}
-		}
-
-		Biome maxBiome = null;
-		int maxCount = 99999;
-		for (Map.Entry<Biome, Integer> biomeCount : biomeCounts.entrySet()) {
-			if (biomeCount.getValue() < maxCount) {
-				maxBiome = biomeCount.getKey();
-			}
-		}
-
-		return maxBiome;
-	}
-
-	private boolean isVoidBiome(Biome biome) {
-		HashSet<Biome> voidBiomes = new HashSet<Biome>(Arrays.asList(
-				Biome.OCEAN,
-				Biome.RIVER,
-				Biome.FROZEN_OCEAN,
-				Biome.FROZEN_RIVER,
-				Biome.WARM_OCEAN,
-				Biome.LUKEWARM_OCEAN,
-				Biome.COLD_OCEAN,
-				Biome.DEEP_WARM_OCEAN,
-				Biome.DEEP_LUKEWARM_OCEAN,
-				Biome.DEEP_COLD_OCEAN,
-				Biome.DEEP_FROZEN_OCEAN
-		));
-
-		return voidBiomes.contains(biome);
 	}
 
 	private void populateColumnBlocks(ChunkData chunk, int x, int y, int z, int floorHeight) {
@@ -123,10 +89,5 @@ public class SkyChunkGenerator extends ChunkGenerator {
 
 			y--;
 		}
-	}
-
-	@Override
-	public List<BlockPopulator> getDefaultPopulators(World world) {
-		return Arrays.asList((BlockPopulator) new TreePopulator());
 	}
 }

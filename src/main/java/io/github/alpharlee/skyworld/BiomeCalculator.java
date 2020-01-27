@@ -1,7 +1,6 @@
 package io.github.alpharlee.skyworld;
 
 import org.bukkit.Chunk;
-import org.bukkit.World;
 import org.bukkit.block.Biome;
 
 import java.util.HashMap;

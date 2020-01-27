@@ -4,9 +4,10 @@ api-version: 1.15
 main: io.github.alpharlee.skyworld.SkyWorld
 prefix: SkyWorld
 load: STARTUP
+depend: [WorldGeneratorApi]
 authors: [AlphaRLee]
 description: A Sky world generator
-website: https://github.com/AlphaRLee
+website: https://github.com/AlphaRLee/SkyWorld
 commands:
   skyworld:
     aliases: [sw]
