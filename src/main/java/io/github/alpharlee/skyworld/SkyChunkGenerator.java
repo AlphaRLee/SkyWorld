@@ -41,13 +41,13 @@ public class SkyChunkGenerator extends ChunkGenerator {
 		generator.setScale(TEST_VAL.get("cs"));
 		floorGenerator.setScale(TEST_VAL.get("fs"));
 
-		// Double for loop to get all 256 blocks of surface
 		double variation = TEST_VAL.get("var");
 		double base = TEST_VAL.get("base");
 
 		double floorVariationMax = TEST_VAL.get("fvar");
 		double floorBase = TEST_VAL.get("fbase");
 
+		// Double for loop to get all 256 blocks of surface
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
 //				if (isVoidBiome(getAverageBiome(biomeGrid, x, z, 5))) {
