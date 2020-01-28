@@ -11,4 +11,10 @@ var: 30
 base: 30
 fvar: 40
 fbase: 180
-threshold: 0.4
+land:
+  octaves: 8
+  scale: 0.004
+  yScale: 0.004
+  frequency: 1.7
+  amplitude: 0.7
+  threshold: 0.4
