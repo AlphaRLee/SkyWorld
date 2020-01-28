@@ -1,7 +1,7 @@
 package io.github.alpharlee.skyworld.populator;
 
 import io.github.alpharlee.skyworld.BiomeCalculator;
-import io.github.alpharlee.skyworld.SkyChunkGenerator;
+import io.github.alpharlee.skyworld.SkyTerrainGenerator;
 import io.github.alpharlee.skyworld.biomedata.TreeBiomeData;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -127,8 +127,8 @@ public class TreePopulator extends BlockPopulator {
 	 * @return The y coordinate of the tree plus 10 more, used for iterations
 	 */
 	private int placeTree(World world, Random random, Chunk chunk, TreeBiomeData treeBiomeData, int topY) {
-		int x = random.nextInt(SkyChunkGenerator.CHUNK_SIZE);
-		int z = random.nextInt(SkyChunkGenerator.CHUNK_SIZE);
+		int x = random.nextInt(SkyTerrainGenerator.CHUNK_SIZE);
+		int z = random.nextInt(SkyTerrainGenerator.CHUNK_SIZE);
 		int y = topY;
 		boolean isValidPosition = false;
 

@@ -1,7 +1,10 @@
 package io.github.alpharlee.skyworld;
 
+import io.github.alpharlee.skyworld.decorator.AirshipDecoration;
 import nl.rutgerkok.worldgeneratorapi.WorldGeneratorApi;
 import nl.rutgerkok.worldgeneratorapi.WorldRef;
+import nl.rutgerkok.worldgeneratorapi.decoration.BaseDecorationType;
+import nl.rutgerkok.worldgeneratorapi.decoration.DecorationType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,7 +25,7 @@ public final class SkyWorld extends JavaPlugin {
 		config = getConfig();
 
 		// TODO delete this debugger
-		LinkedHashMap<String, Double> TEST_VAL = SkyChunkGenerator.TEST_VAL;
+		LinkedHashMap<String, Double> TEST_VAL = SkyTerrainGenerator.TEST_VAL;
 		for (String key : TEST_VAL.keySet()) {
 			TEST_VAL.put(key, config.getDouble(key));
 		}
@@ -42,7 +45,10 @@ public final class SkyWorld extends JavaPlugin {
 		int worldGeneratorApiVersionMinor = 4;
 		return WorldGeneratorApi.getInstance(this, worldGeneratorApiVersionMajor, worldGeneratorApiVersionMinor)
 				.createCustomGenerator(WorldRef.ofName(worldName), generator -> {
-					generator.setBaseChunkGenerator(new SkyChunkGenerator(generator.getWorld()));
+					generator.setBaseTerrainGenerator(new SkyTerrainGenerator(generator.getWorld()));
+					generator.getWorldDecorator().withoutDefaultBaseDecorations(BaseDecorationType.CARVING_LIQUID);
+					generator.getWorldDecorator().withoutDefaultBaseDecorations(BaseDecorationType.BEDROCK);
+					generator.getWorldDecorator().withCustomDecoration(DecorationType.SURFACE_STRUCTURES, new AirshipDecoration(generator.getWorld()));
 					getLogger().info("Enabling SkyWorld generator for world " + worldName);
 				});
 	}
@@ -67,7 +73,7 @@ public final class SkyWorld extends JavaPlugin {
 
 	// FIXME delete
 	private void TEST_setVals(CommandSender sender, String[] args) {
-		LinkedHashMap<String, Double> TEST_VAL = SkyChunkGenerator.TEST_VAL;
+		LinkedHashMap<String, Double> TEST_VAL = SkyTerrainGenerator.TEST_VAL;
 
 		if (args.length < 1) {
 			sender.sendMessage("---------");

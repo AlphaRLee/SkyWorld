@@ -79,7 +79,7 @@
         <dependency>
             <groupId>nl.rutgerkok</groupId>
             <artifactId>worldgeneratorapi</artifactId>
-            <version>0.2</version>
+            <version>0.3</version>
             <scope>provided</scope> <!-- Important, otherwise WorldGeneratorApi will be placed in your JAR file if you're using maven-shade-plugin -->
         </dependency>
     </dependencies>
