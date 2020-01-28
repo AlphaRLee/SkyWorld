@@ -8,7 +8,6 @@ import org.bukkit.generator.ChunkGenerator.ChunkData;
 import org.bukkit.util.noise.OctaveGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
-import java.util.LinkedHashMap;
 import java.util.Random;
 
 /**
@@ -28,7 +27,6 @@ public class SkyTerrainGenerator implements BaseTerrainGenerator {
 	}
 
 	public void setBlocksInChunk(GeneratingChunk chunk) {
-//		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), (int) Math.floor(TEST_VAL.get("co")));
 		int landOctaves = (int) skyWorldConfig.getLandOctaves().get(worldRef);
 		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), landOctaves);
 		SimplexOctaveGenerator maxHeightGenerator = new SimplexOctaveGenerator(new Random(world.getSeed() >> 1), 5);
@@ -49,19 +47,16 @@ public class SkyTerrainGenerator implements BaseTerrainGenerator {
 
 		double landScale = (double) skyWorldConfig.getLandScale().get(worldRef);
 		double landYScale = (double) skyWorldConfig.getLandYScale().get(worldRef);
-//		generator.setScale(TEST_VAL.get("cs"));
 		generator.setScale(landScale);
 		generator.setYScale(landYScale);
 
-//		maxHeightGenerator.setScale(TEST_VAL.get("fs"));
 		maxHeightGenerator.setScale(0.01);
 
-//		int y = (int) (maxHeightGenerator.noise(x, z, TEST_VAL.get("ff"), TEST_VAL.get("fa"), true) * TEST_VAL.get("fvar") + TEST_VAL.get("fbase"));
 		int y = (int) (maxHeightGenerator.noise(x, z, 1.2, 0.5, true) * 40.0 + 160);
 		if (y >= world.getMaxHeight()) {
 			y = world.getMaxHeight() - 1;
 		}
-//		int floorHeight = (int) (maxHeightGenerator.noise(x, z, TEST_VAL.get("ff"), TEST_VAL.get("fa"), true) * 8 + 8);
+
 		int floorHeight = (int) (maxHeightGenerator.noise(x, z, 1.2, 0.5, true) * 8.0 + 8);
 		if (floorHeight <= 0) {
 			floorHeight = 0;
@@ -76,9 +71,7 @@ public class SkyTerrainGenerator implements BaseTerrainGenerator {
 		boolean isSolidAbove = false;
 		while (y > floorHeight) {
 
-//			boolean isSolid = generator.noise(x, y,  z, TEST_VAL.get("cf"), TEST_VAL.get("ca"), true) >= landThreshold;
 			isSolid = generator.noise(x, y,  z, landFrequency, landAmplitude, true) >= landThreshold;
-
 			if (isSolid) {
 				if (y <= 50 && i < caveSurfaceMaterials.length && !isSolidAbove) {
 					chunkData.setBlock(x, y, z, caveSurfaceMaterials[i++]);

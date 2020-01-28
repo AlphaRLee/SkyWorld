@@ -10,9 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 public final class SkyWorld extends JavaPlugin {
 
 	private SkyWorldConfig skyWorldConfig;
@@ -21,17 +18,11 @@ public final class SkyWorld extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		// Plugin startup logic
-		int worldGeneratorApiVersionMajor = 0;
-		int worldGeneratorApiVersionMinor = 4;
-		worldGeneratorApi = WorldGeneratorApi.getInstance(this, worldGeneratorApiVersionMajor, worldGeneratorApiVersionMinor);
+		int apiVersionMajor = 0;
+		int apiVersionMinor = 4;
+		worldGeneratorApi = WorldGeneratorApi.getInstance(this, apiVersionMajor, apiVersionMinor);
 
 		skyWorldConfig = new SkyWorldConfig(this, worldGeneratorApi.getPropertyRegistry());
-
-		// TODO delete this debugger
-//		LinkedHashMap<String, Double> TEST_VAL = SkyTerrainGenerator.TEST_VAL;
-//		for (String key : TEST_VAL.keySet()) {
-//			TEST_VAL.put(key, config.getDouble(key));
-//		}
 	}
 
 	@Override
@@ -77,35 +68,5 @@ public final class SkyWorld extends JavaPlugin {
 
 //		setConfigCmd(sender, args);
 		return true;
-	}
-
-	// FIXME delete
-	private void setConfigCmd(CommandSender sender, String[] args) {
-		LinkedHashMap<String, Double> TEST_VAL = SkyTerrainGenerator.TEST_VAL;
-
-		if (args.length < 2) {
-			sender.sendMessage("---------");
-			for (Map.Entry<String, Double> vals : TEST_VAL.entrySet()) {
-				sender.sendMessage(vals.getKey() + ": " + vals.getValue());
-			}
-			sender.sendMessage("---------\nRemember to save!");
-			return;
-		}
-
-		String arg0 = args[1].toLowerCase();
-		if (!TEST_VAL.containsKey(arg0)) {
-			sender.sendMessage("Error, can't recognize " + arg0);
-			return;
-		}
-
-		if (args.length < 3) {
-			sender.sendMessage(arg0 + ": " + TEST_VAL.get(arg0));
-			return;
-		}
-
-		Double arg1 = Double.valueOf(args[2].toLowerCase());
-		TEST_VAL.put(arg0, arg1);
-		config.set(arg0, arg1);
-		sender.sendMessage("Changed " + arg0 + " to " + arg1);
 	}
 }
