@@ -1,6 +1,6 @@
 package io.github.alpharlee.skyworld;
 
-import io.github.alpharlee.skyworld.decorator.AirshipDecoration;
+import io.github.alpharlee.skyworld.decoration.AirshipDecoration;
 import nl.rutgerkok.worldgeneratorapi.WorldGeneratorApi;
 import nl.rutgerkok.worldgeneratorapi.WorldRef;
 import nl.rutgerkok.worldgeneratorapi.decoration.BaseDecorationType;
