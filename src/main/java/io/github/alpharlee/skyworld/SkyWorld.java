@@ -10,24 +10,37 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+
 public final class SkyWorld extends JavaPlugin {
+
+	private static SkyWorld instance;
 
 	private SkyWorldConfig skyWorldConfig;
 	private WorldGeneratorApi worldGeneratorApi;
 
 	@Override
 	public void onEnable() {
-		// Plugin startup logic
+		instance = this;
+
+		setupFileStructure();
+
 		int apiVersionMajor = 0;
 		int apiVersionMinor = 4;
 		worldGeneratorApi = WorldGeneratorApi.getInstance(this, apiVersionMajor, apiVersionMinor);
 
 		skyWorldConfig = new SkyWorldConfig(this, worldGeneratorApi.getPropertyRegistry());
+
+		getServer().getPluginManager().registerEvents(new EventListener(), this);
 	}
 
 	@Override
 	public void onDisable() {
 		// Plugin shutdown logic
+	}
+
+	public static SkyWorld getInstance() {
+		return instance;
 	}
 
 	@Override
@@ -42,7 +55,7 @@ public final class SkyWorld extends JavaPlugin {
 			generator.setBaseTerrainGenerator(new SkyTerrainGenerator(generator.getWorldRef(), generator.getWorld(), skyWorldConfig));
 			generator.getWorldDecorator().withoutDefaultBaseDecorations(BaseDecorationType.CARVING_LIQUID);
 			generator.getWorldDecorator().withoutDefaultBaseDecorations(BaseDecorationType.BEDROCK);
-			generator.getWorldDecorator().withCustomDecoration(DecorationType.SURFACE_STRUCTURES, new AirshipDecoration(generator.getWorld()));
+			generator.getWorldDecorator().withCustomDecoration(DecorationType.SURFACE_STRUCTURES, new AirshipDecoration(generator.getWorld(), skyWorldConfig));
 
 			// Update the config and save it with valid values
 			skyWorldConfig.writeConfig(worldRef, getConfig());
@@ -68,5 +81,12 @@ public final class SkyWorld extends JavaPlugin {
 
 //		setConfigCmd(sender, args);
 		return true;
+	}
+
+	private void setupFileStructure() {
+		File schematicsDirectory = new File(getDataFolder() + File.separator + "schematics" + File.separator);
+		if (!schematicsDirectory.exists()) {
+			schematicsDirectory.mkdirs();
+		}
 	}
 }

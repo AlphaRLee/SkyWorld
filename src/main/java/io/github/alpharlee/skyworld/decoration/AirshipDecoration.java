@@ -1,26 +1,23 @@
 package io.github.alpharlee.skyworld.decoration;
 
-import io.github.alpharlee.skyworld.SkyWorld;
 import io.github.alpharlee.skyworld.SkyWorldConfig;
 import nl.rutgerkok.worldgeneratorapi.WorldRef;
-import nl.rutgerkok.worldgeneratorapi.decoration.Decoration;
 import nl.rutgerkok.worldgeneratorapi.decoration.DecorationArea;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 import java.util.Random;
 
-public class AirshipDecoration implements Decoration {
-	private final World world;
+public class AirshipDecoration extends SkyWorldDecoration {
+	private final WorldRef worldRef;
 	private SimplexOctaveGenerator terrainTester;
 	private SkyWorldConfig skyWorldConfig;
 
 	public AirshipDecoration(World world, SkyWorldConfig skyWorldConfig) {
-		this.world = world;
+		this.worldRef = WorldRef.of(world);
 		this.skyWorldConfig = skyWorldConfig;
 
-		int landOctaves = (int) skyWorldConfig.getLandOctaves().get(WorldRef.of(world));
+		int landOctaves = (int) skyWorldConfig.getLandOctaves().get(worldRef);
 		terrainTester = new SimplexOctaveGenerator(new Random(world.getSeed()), landOctaves);
 	}
 
@@ -31,7 +28,7 @@ public class AirshipDecoration implements Decoration {
 	 * <p>
 	 * Note: <strong>this method can be called on any thread</strong>, including the
 	 * main server thread. As long as you only use the methods contained in the
-	 * decoration area and in the {@link PropertyRegistry property registry},
+	 * decoration area and in the propertyRegistry,
 	 * there's no need to worry about this. However, if you use/call code from other
 	 * areas (like the rest of the world or an ordinary hash map from your plugin)
 	 * you will get into trouble. Exceptions may be thrown, or worse: your world may
@@ -42,7 +39,6 @@ public class AirshipDecoration implements Decoration {
 	 */
 	@Override
 	public void decorate(DecorationArea area, Random random) {
-
 		int minSpawnHeight = 16;
 		int maxSpawnHeight = 180;
 
@@ -50,7 +46,7 @@ public class AirshipDecoration implements Decoration {
 		for (int i = 0; i < maxTestCount; i++) {
 			int x = random.nextInt(2 * DecorationArea.DECORATION_RADIUS) - DecorationArea.DECORATION_RADIUS + area.getCenterX();
 			int z = random.nextInt(2 * DecorationArea.DECORATION_RADIUS) - DecorationArea.DECORATION_RADIUS + area.getCenterZ();
-			int y = random.nextInt(maxSpawnHeight - minSpawnHeight) + maxSpawnHeight;
+			int y = random.nextInt(maxSpawnHeight - minSpawnHeight) + minSpawnHeight;
 
 			if (shouldSpawn(x, y, z, random)) {
 				spawn(area, x, y, z);
@@ -62,13 +58,14 @@ public class AirshipDecoration implements Decoration {
 		double landFrequency = (double) skyWorldConfig.getLandFrequency().get(worldRef);
 		double landAmplitude = (double) skyWorldConfig.getLandAmplitude().get(worldRef);
 
-		double spawnThreshold = -0.8;
+		double spawnThreshold = -0.5;
 		double probability = 1;
 
 		return random.nextDouble() <= probability && terrainTester.noise(x, y, z, landFrequency, landAmplitude, true) <= spawnThreshold;
 	}
 
-	private void spawn(DecorationArea area, int x, int y, int z) {
-		area.setBlock(x, y, z, Material.BEDROCK);
+	@Override
+	public String getDecorationName() {
+		return "airship";
 	}
 }

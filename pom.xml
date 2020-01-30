@@ -67,6 +67,10 @@
             <id>rutger-repo</id>
             <url>http://rutgerkok.nl/repo</url>
         </repository>
+        <repository>
+            <id>enginehub-maven</id>
+            <url>http://maven.enginehub.org/repo/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -81,6 +85,12 @@
             <artifactId>worldgeneratorapi</artifactId>
             <version>0.3</version>
             <scope>provided</scope> <!-- Important, otherwise WorldGeneratorApi will be placed in your JAR file if you're using maven-shade-plugin -->
+        </dependency>
+        <dependency>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-bukkit</artifactId>
+            <version>7.1.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
