@@ -50,7 +50,10 @@ public class EventListener implements Listener {
 				Integer.valueOf(yamlLoad.get("z").toString()));
 
 		dataBlock.setType(Material.AIR); // Destroy the data block
-		event.getWorld().getBlockAt(decorationData.x, decorationData.y, decorationData.z).setType(Material.REDSTONE_LAMP);
+
+		int x = decorationData.x, y = decorationData.y, z = decorationData.z;
+//		event.getWorld().getBlockAt(decorationData.x, decorationData.y, decorationData.z).setType(Material.REDSTONE_LAMP);
+		SkyWorld.getInstance().getDecorationManager().pasteSchematic(event.getWorld(), decorationData.name, x, y, z);
 
 		System.out.println("Set redstone lamp at " + decorationData.x + " " + decorationData.y + " " + decorationData.z);
 	}

@@ -66,6 +66,7 @@ public class AirshipDecoration extends SkyWorldDecoration {
 
 	@Override
 	public String getDecorationName() {
-		return "airship";
+//		return "airship";
+		return "fantasy_med_1";
 	}
 }

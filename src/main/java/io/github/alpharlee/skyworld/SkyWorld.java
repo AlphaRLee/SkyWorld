@@ -7,6 +7,7 @@ import nl.rutgerkok.worldgeneratorapi.decoration.BaseDecorationType;
 import nl.rutgerkok.worldgeneratorapi.decoration.DecorationType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,6 +20,8 @@ public final class SkyWorld extends JavaPlugin {
 	private SkyWorldConfig skyWorldConfig;
 	private WorldGeneratorApi worldGeneratorApi;
 
+	private DecorationManager decorationManager;
+
 	@Override
 	public void onEnable() {
 		instance = this;
@@ -30,6 +33,7 @@ public final class SkyWorld extends JavaPlugin {
 		worldGeneratorApi = WorldGeneratorApi.getInstance(this, apiVersionMajor, apiVersionMinor);
 
 		skyWorldConfig = new SkyWorldConfig(this, worldGeneratorApi.getPropertyRegistry());
+		decorationManager = new DecorationManager();
 
 		getServer().getPluginManager().registerEvents(new EventListener(), this);
 	}
@@ -43,10 +47,13 @@ public final class SkyWorld extends JavaPlugin {
 		return instance;
 	}
 
+	public DecorationManager getDecorationManager() {
+		return decorationManager;
+	}
+
 	@Override
 	public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
 		// TODO Add id as parameter (make customizable terrain settings)
-//		return new SkyChunkGenerator();
 
 		WorldRef worldRef = WorldRef.ofName(worldName);
 		return worldGeneratorApi.createCustomGenerator(worldRef, generator -> {
@@ -72,15 +79,49 @@ public final class SkyWorld extends JavaPlugin {
 			return false;
 		}
 
+		if (args.length < 1) {
 		// FIXME delete this
-		if (args.length >= 1 && args[0].equalsIgnoreCase("save")) {
-			saveConfig();
-			sender.sendMessage("Config saved!");
+			sender.sendMessage("SkyWorld debugger. Try paste");
 			return true;
 		}
 
-//		setConfigCmd(sender, args);
+		// FIXME delete this
+		switch (args[0].toLowerCase()) {
+			case "save":
+				saveConfig();
+				sender.sendMessage("Config saved!");
+				return true;
+			case "paste":
+				pasteCmd(sender, args);
+				return true;
+		}
+
 		return true;
+	}
+
+	private void pasteCmd(CommandSender sender, String[] args) {
+		Player player = (Player) sender;
+		if (args.length < 2) {
+			sender.sendMessage("Usage: /sw paste name x y z");
+			return;
+		}
+
+		String decorationName = args[1];
+
+		int x, y, z;
+		if (args.length >= 4) {
+			x = Integer.valueOf(args[2]);
+			y = Integer.valueOf(args[3]);
+			z = Integer.valueOf(args[4]);
+		} else {
+			x = (int) Math.floor(player.getLocation().getX());
+			y = (int) Math.floor(player.getLocation().getY());
+			z = (int) Math.floor(player.getLocation().getZ());
+		}
+
+		SkyWorld.getInstance().getDecorationManager().pasteSchematic(player.getWorld(), decorationName, x, y, z);
+
+		sender.sendMessage("Pasted " + decorationName + " at " + x + " " + y + " " + z);
 	}
 
 	private void setupFileStructure() {
