@@ -49,6 +49,7 @@ public class EventListener implements Listener {
 				Integer.valueOf(yamlLoad.get("y").toString()),
 				Integer.valueOf(yamlLoad.get("z").toString()));
 
+		inventory.clear();
 		dataBlock.setType(Material.AIR); // Destroy the data block
 
 		int x = decorationData.x, y = decorationData.y, z = decorationData.z;

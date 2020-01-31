@@ -12,6 +12,7 @@ import com.sk89q.worldedit.function.mask.*;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.session.ClipboardHolder;
 //import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockTypes;
@@ -45,7 +46,11 @@ public class DecorationManager {
 		}
 
 		try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(weWorld, -1)) {
-			Operation operation = new ClipboardHolder(clipboard)
+			AffineTransform rotationTransform = new AffineTransform();
+			rotationTransform = rotationTransform.rotateY(Math.floor(Math.random() * 4) * 90);
+ 			ClipboardHolder rotatedHolder = new ClipboardHolder(clipboard);
+			rotatedHolder.setTransform(rotatedHolder.getTransform().combine(rotationTransform));
+			Operation operation = rotatedHolder
 					.createPaste(editSession)
 					.to(BlockVector3.at(x, y, z))
 					.copyEntities(true)
