@@ -25,7 +25,7 @@ public class DecorationSettings implements ConfigurationSerializable {
 
 		name = (String) data.get("name");
 		placementType = PlacementType.get((String) data.get("type"));
-		schematicName = (String) data.get("schematicName");
+		schematicName = (String) data.get("schematic");
 		spawnChance = (double) data.get("spawnChance");
 		spawnAttempts = (int) data.get("spawnAttempts");
 	}

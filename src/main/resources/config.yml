@@ -20,7 +20,7 @@ land:
 decorations:
   - name: airship
     type: air
-    schematic: fantasy_house_med
+    schematic: fantasy_house_med_1
     spawnChance: 0.5
     spawnAttempts: 10
 
