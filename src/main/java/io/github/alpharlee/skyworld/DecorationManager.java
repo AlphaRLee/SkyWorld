@@ -14,16 +14,41 @@ import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.session.ClipboardHolder;
-//import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import io.github.alpharlee.skyworld.decoration.AirDecoration;
+import io.github.alpharlee.skyworld.decoration.DecorationSettings;
+import io.github.alpharlee.skyworld.decoration.DynamicDecoration;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DecorationManager {
+	private List<DecorationSettings> decorationSettingsList;
+	public DecorationManager() {
+		decorationSettingsList = new ArrayList<>();
+	}
+
+	public void loadDecorationsFromConfig(FileConfiguration config) {
+		// TODO Apparently the easiest way to read a list of objects from config is just to do unsafe casting. Any better ways?
+		List<Map<String, Object>> decorationMaps = (List<Map<String, Object>>) config.get("decorations");
+		for (Map<String, Object> decorationMap : decorationMaps) {
+			decorationSettingsList.add(new DecorationSettings(decorationMap));
+		}
+	}
+
+	public List<DecorationSettings> getDecorationSettingsList() {
+		return decorationSettingsList;
+	}
+
 	public void pasteSchematic(World world, String schematicName, int x, int y, int z) {
 		com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);;
 

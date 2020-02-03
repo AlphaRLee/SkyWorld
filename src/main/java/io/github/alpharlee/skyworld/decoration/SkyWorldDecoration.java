@@ -18,10 +18,10 @@ public abstract class SkyWorldDecoration implements Decoration{
 	public static final Material DATA_BLOCK = Material.TRAPPED_CHEST;
 	public static final Material DATA_ITEM = Material.POISONOUS_POTATO;
 
-	public abstract String getDecorationName();
+	public abstract String getSchematicName();
 
 	protected void spawn(DecorationArea area, int x, int y, int z) {
-		DecorationData data = new DecorationData(getDecorationName(), x, y, z);
+		DecorationData data = new DecorationData(getSchematicName(), x, y, z);
 
 		Yaml yaml = new Yaml();
 		String serializedData = yaml.dumpAsMap(data);

@@ -9,10 +9,8 @@ import org.bukkit.block.Chest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.inventory.Inventory;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,7 +42,7 @@ public class EventListener implements Listener {
 
 		Yaml yaml = new Yaml();
 		LinkedHashMap<String, Object> yamlLoad = yaml.load(String.join("\n", itemLore));
-		DecorationData decorationData = new DecorationData(String.valueOf(yamlLoad.get("name")),
+		DecorationData decorationData = new DecorationData(String.valueOf(yamlLoad.get("schematicName")),
 				Integer.valueOf(yamlLoad.get("x").toString()),
 				Integer.valueOf(yamlLoad.get("y").toString()),
 				Integer.valueOf(yamlLoad.get("z").toString()));
@@ -53,8 +51,7 @@ public class EventListener implements Listener {
 		dataBlock.setType(Material.AIR); // Destroy the data block
 
 		int x = decorationData.x, y = decorationData.y, z = decorationData.z;
-//		event.getWorld().getBlockAt(decorationData.x, decorationData.y, decorationData.z).setType(Material.REDSTONE_LAMP);
-		SkyWorld.getInstance().getDecorationManager().pasteSchematic(event.getWorld(), decorationData.name, x, y, z);
+		SkyWorld.getInstance().getDecorationManager().pasteSchematic(event.getWorld(), decorationData.schematicName, x, y, z);
 
 		System.out.println("Set redstone lamp at " + decorationData.x + " " + decorationData.y + " " + decorationData.z);
 	}

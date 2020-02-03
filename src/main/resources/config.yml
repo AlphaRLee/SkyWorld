@@ -1,3 +1,15 @@
+# Decorations are custom structures that can be loaded into the game world
+#   name: The name of the decoration (CURRENTLY UNUSED)
+#   type: Nature of where the decoration can spawn. Valid choices are "air", "floor", "ceiling", and "wall"
+#   schematic: The name of the schematic file being used (file must be .schem type).
+#     Schematics should be stored inside ./plugins/WorldEdit/schematics/
+#   spawnChance: The probability between 0 and 1 that the decoration will be spawned. Lower numbers are more rare
+#   spawnAttempts: The number of times the decoration will attempt to find a valid region to spawn in
+#     Note: This occurs before the spawnChance is calculated.
+#       If spawnAttempts is set to 10 and spawnChance is set to 0.01,
+#       then the system will try 10 random locations to spawn this decoration.
+#       If any of the locations are valid, then there is a 0.01 (1%) chance a decoration will spawn at that location
+
 land:
   octaves: 8
   scale: 0.004
@@ -5,3 +17,10 @@ land:
   frequency: 1.7
   amplitude: 0.7
   threshold: 0.4
+decorations:
+  - name: airship
+    type: air
+    schematic: fantasy_house_med
+    spawnChance: 0.5
+    spawnAttempts: 10
+

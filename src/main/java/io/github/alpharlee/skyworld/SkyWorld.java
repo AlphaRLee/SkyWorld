@@ -1,12 +1,19 @@
 package io.github.alpharlee.skyworld;
 
+import io.github.alpharlee.skyworld.decoration.AirDecoration;
 import io.github.alpharlee.skyworld.decoration.AirshipDecoration;
+import io.github.alpharlee.skyworld.decoration.DecorationSettings;
+import io.github.alpharlee.skyworld.decoration.DynamicDecoration;
+import nl.rutgerkok.worldgeneratorapi.WorldGenerator;
 import nl.rutgerkok.worldgeneratorapi.WorldGeneratorApi;
 import nl.rutgerkok.worldgeneratorapi.WorldRef;
 import nl.rutgerkok.worldgeneratorapi.decoration.BaseDecorationType;
 import nl.rutgerkok.worldgeneratorapi.decoration.DecorationType;
+import nl.rutgerkok.worldgeneratorapi.decoration.WorldDecorator;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,12 +35,15 @@ public final class SkyWorld extends JavaPlugin {
 
 		setupFileStructure();
 
+		ConfigurationSerialization.registerClass(DecorationSettings.class, "DecorationSettings");
+
 		int apiVersionMajor = 0;
 		int apiVersionMinor = 4;
 		worldGeneratorApi = WorldGeneratorApi.getInstance(this, apiVersionMajor, apiVersionMinor);
 
-		skyWorldConfig = new SkyWorldConfig(this, worldGeneratorApi.getPropertyRegistry());
 		decorationManager = new DecorationManager();
+		decorationManager.loadDecorationsFromConfig(getConfig());
+		skyWorldConfig = new SkyWorldConfig(this, worldGeneratorApi.getPropertyRegistry(), decorationManager.getDecorationSettingsList());
 
 		getServer().getPluginManager().registerEvents(new EventListener(), this);
 	}
@@ -62,7 +72,9 @@ public final class SkyWorld extends JavaPlugin {
 			generator.setBaseTerrainGenerator(new SkyTerrainGenerator(generator.getWorldRef(), generator.getWorld(), skyWorldConfig));
 			generator.getWorldDecorator().withoutDefaultBaseDecorations(BaseDecorationType.CARVING_LIQUID);
 			generator.getWorldDecorator().withoutDefaultBaseDecorations(BaseDecorationType.BEDROCK);
-			generator.getWorldDecorator().withCustomDecoration(DecorationType.SURFACE_STRUCTURES, new AirshipDecoration(generator.getWorld(), skyWorldConfig));
+//			generator.getWorldDecorator().withCustomDecoration(DecorationType.SURFACE_STRUCTURES, new AirshipDecoration(generator.getWorld(), skyWorldConfig));
+
+			loadDynamicDecorations(generator.getWorldDecorator(), generator.getWorld());
 
 			// Update the config and save it with valid values
 			skyWorldConfig.writeConfig(worldRef, getConfig());
@@ -70,6 +82,29 @@ public final class SkyWorld extends JavaPlugin {
 
 			getLogger().info("Enabling SkyWorld generator for world " + worldName);
 		});
+	}
+
+	private void loadDynamicDecorations(WorldDecorator worldDecorator, World world) {
+		for (DecorationSettings settings : decorationManager.getDecorationSettingsList()) {
+			DynamicDecoration dynamicDecoration = null;
+
+			// TODO Any way to deal with the giant switch statement?
+			switch (settings.placementType) {
+				case AIR:
+					dynamicDecoration = new AirDecoration(settings.name, settings.schematicName, world, skyWorldConfig);
+					break;
+				case FLOOR:
+					break;
+				case CEILING:
+					break;
+				case WALL:
+					break;
+			}
+
+			if (dynamicDecoration != null) {
+				worldDecorator.withCustomDecoration(DecorationType.SURFACE_STRUCTURES, dynamicDecoration);
+			}
+		}
 	}
 
 	@Override
@@ -102,7 +137,7 @@ public final class SkyWorld extends JavaPlugin {
 	private void pasteCmd(CommandSender sender, String[] args) {
 		Player player = (Player) sender;
 		if (args.length < 2) {
-			sender.sendMessage("Usage: /sw paste name x y z");
+			sender.sendMessage("Usage: /sw paste schematicName x y z");
 			return;
 		}
 

@@ -1,11 +1,17 @@
 package io.github.alpharlee.skyworld;
 
+import io.github.alpharlee.skyworld.decoration.DecorationSettings;
 import nl.rutgerkok.worldgeneratorapi.WorldRef;
 import nl.rutgerkok.worldgeneratorapi.property.FloatProperty;
+import nl.rutgerkok.worldgeneratorapi.property.Property;
 import nl.rutgerkok.worldgeneratorapi.property.PropertyRegistry;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SkyWorldConfig {
 	private static final String LAND_OCTAVES = "land.octaves";
@@ -22,16 +28,28 @@ public class SkyWorldConfig {
 	private final FloatProperty landAmplitude;
 	private final FloatProperty landThreshold;
 
-	public SkyWorldConfig(Plugin plugin, PropertyRegistry registry) {
+	private final Map<String, FloatProperty> dynamicDecorationProperties;
+
+	public SkyWorldConfig(Plugin plugin, PropertyRegistry registry, List<DecorationSettings> decorationSettingsList) {
 		landOctaves = registry.getFloat(new NamespacedKey(plugin, LAND_OCTAVES), 8);
 		landScale = registry.getFloat(new NamespacedKey(plugin, LAND_SCALE), 0.004f);
 		landYScale = registry.getFloat(new NamespacedKey(plugin, LAND_Y_SCALE), 0.004f);
 		landFrequency = registry.getFloat(new NamespacedKey(plugin, LAND_FREQUENCY), 1.7f);
 		landAmplitude = registry.getFloat(new NamespacedKey(plugin, LAND_AMPLITUDE), 0.7f);
 		landThreshold = registry.getFloat(new NamespacedKey(plugin, LAND_THRESHOLD), 0.4f);
+
+		dynamicDecorationProperties = new HashMap<>();
+		for (DecorationSettings decorationSettings : decorationSettingsList ) {
+			String name = decorationSettings.name;
+			setDynamicDecorationProperty(name + "." + "spawnChance", (float) decorationSettings.spawnChance, plugin, registry);
+			setDynamicDecorationProperty(name + "." + "spawnAttempts", (float) decorationSettings.spawnAttempts, plugin, registry);
+		}
 	}
 
-
+	private void setDynamicDecorationProperty(String key, float value, Plugin plugin, PropertyRegistry registry) {
+		final FloatProperty valProperty = registry.getFloat(new NamespacedKey(plugin, key), value);
+		dynamicDecorationProperties.put(key, valProperty);
+	}
 
 	public void readConfig(WorldRef worldRef, FileConfiguration fileConfiguration) {
 		landOctaves.setWorldDefault(worldRef, fileConfiguration.getInt(LAND_OCTAVES, (int) landOctaves.get(worldRef)));
@@ -57,5 +75,9 @@ public class SkyWorldConfig {
 	public final FloatProperty getLandFrequency() { return landFrequency; }
 	public final FloatProperty getLandAmplitude() { return landAmplitude; }
 	public final FloatProperty getLandThreshold() { return landThreshold; }
+
+	public final FloatProperty getDynamicDecorationProperty(String name, String property) {
+		return dynamicDecorationProperties.get(name + "." + property);
+	}
 }
 
