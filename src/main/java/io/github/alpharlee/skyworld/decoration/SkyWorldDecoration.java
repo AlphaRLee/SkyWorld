@@ -35,6 +35,5 @@ public abstract class SkyWorldDecoration implements Decoration{
 		SpawnDecorationRunnable runnable = new SpawnDecorationRunnable(Bukkit.getWorld(worldRef.getName()), data);
 		final long ONE_SECOND = 20l;
 		runnable.runTaskTimer(SkyWorld.getInstance(), ONE_SECOND, ONE_SECOND);
-		Bukkit.getLogger().info("!!! Decoration called event at " + x + " " + y + " " + z); // FIXME delete
 	}
 }

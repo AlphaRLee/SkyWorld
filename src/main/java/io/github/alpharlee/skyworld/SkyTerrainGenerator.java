@@ -99,6 +99,25 @@ public class SkyTerrainGenerator implements BaseTerrainGenerator {
 	 */
 	@Override
 	public int getHeight(int x, int z, HeightType type) {
-		return 64; // TODO Make dynamic
+		int landOctaves = (int) skyWorldConfig.getLandOctaves().get(worldRef);
+		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), landOctaves);
+		double landFrequency = (double) skyWorldConfig.getLandFrequency().get(worldRef);
+		double landAmplitude = (double) skyWorldConfig.getLandAmplitude().get(worldRef);
+		double landThreshold = (double) skyWorldConfig.getLandThreshold().get(worldRef);
+
+		int y = (int) Math.floor(Math.random() * 255);
+
+		int i = 0;
+		boolean isSolid;
+		boolean isSolidAbove = false;
+		while (y > 0) {
+			isSolid = generator.noise(x, y,  z, landFrequency, landAmplitude, true) >= landThreshold;
+			if (isSolid) {
+				return y;
+			}
+			y--;
+		}
+
+		return -1;
 	}
 }

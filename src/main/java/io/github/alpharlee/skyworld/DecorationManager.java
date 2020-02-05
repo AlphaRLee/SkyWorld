@@ -28,27 +28,34 @@ import java.util.List;
 import java.util.Map;
 
 public class DecorationManager {
-	private List<DecorationSettings> decorationSettingsList;
-	public DecorationManager() {
-		decorationSettingsList = new ArrayList<>();
-	}
+//	private List<DecorationSettings> decorationSettingsList;
+//	public DecorationManager() {
+//		decorationSettingsList = new ArrayList<>();
+//	}
+//
+//	public void loadDecorationsFromConfig(FileConfiguration config) {
+//		// TODO Apparently the easiest way to read a list of objects from config is just to do unsafe casting. Any better ways?
+//		List<Map<String, Object>> decorationMaps = (List<Map<String, Object>>) config.get("decorations");
+//		for (Map<String, Object> decorationMap : decorationMaps) {
+//			decorationSettingsList.add(new DecorationSettings(decorationMap));
+//		}
+//	}
+//
+//	public List<DecorationSettings> getDecorationSettingsList() {
+//		return decorationSettingsList;
+//	}
 
-	public void loadDecorationsFromConfig(FileConfiguration config) {
-		// TODO Apparently the easiest way to read a list of objects from config is just to do unsafe casting. Any better ways?
-		List<Map<String, Object>> decorationMaps = (List<Map<String, Object>>) config.get("decorations");
-		for (Map<String, Object> decorationMap : decorationMaps) {
-			decorationSettingsList.add(new DecorationSettings(decorationMap));
-		}
-	}
+	private final String schematicsDirName;
 
-	public List<DecorationSettings> getDecorationSettingsList() {
-		return decorationSettingsList;
+	public DecorationManager(final String schematicsDirName) {
+		schematicsDirName.replace("/", File.separator).replace("\\", File.separator);
+		this.schematicsDirName = schematicsDirName + File.separator;
 	}
 
 	public void pasteSchematic(String schematicName, World world, int x, int y, int z) {
 		com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);;
 
-		String schematicsDirName = SkyWorld.getInstance().getDataFolder() + File.separator + "schematics" + File.separator;
+//		String schematicsDirName = SkyWorld.getInstance().getDataFolder() + File.separator + "schematics"; // FIXME delete
 		File schemFile = new File(schematicsDirName + schematicName + ".schem");
 
 		ClipboardFormat format = ClipboardFormats.findByFile(schemFile);

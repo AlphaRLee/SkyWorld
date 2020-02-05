@@ -10,6 +10,7 @@
 #       then the system will try 10 random locations to spawn this decoration.
 #       If any of the locations are valid, then there is a 0.01 (1%) chance a decoration will spawn at that location
 
+schematics: plugins/WorldEdit/schematics
 land:
   octaves: 8
   scale: 0.004

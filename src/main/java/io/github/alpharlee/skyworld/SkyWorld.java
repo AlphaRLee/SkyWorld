@@ -39,9 +39,9 @@ public final class SkyWorld extends JavaPlugin {
 		int apiVersionMinor = 4;
 		worldGeneratorApi = WorldGeneratorApi.getInstance(this, apiVersionMajor, apiVersionMinor);
 
-		decorationManager = new DecorationManager();
-		decorationManager.loadDecorationsFromConfig(getConfig());
-		skyWorldConfig = new SkyWorldConfig(this, worldGeneratorApi.getPropertyRegistry(), decorationManager.getDecorationSettingsList());
+		decorationManager = new DecorationManager(getConfig().getString("schematics", getDataFolder() + File.separator + "schematics"));
+//		decorationManager.loadDecorationsFromConfig(getConfig());
+		skyWorldConfig = new SkyWorldConfig(this, worldGeneratorApi.getPropertyRegistry(), getConfig());
 
 		getServer().getPluginManager().registerEvents(new EventListener(skyWorldConfig), this);
 	}
@@ -83,7 +83,7 @@ public final class SkyWorld extends JavaPlugin {
 	}
 
 	private void loadDynamicDecorations(WorldDecorator worldDecorator, World world) {
-		for (DecorationSettings settings : decorationManager.getDecorationSettingsList()) {
+		for (DecorationSettings settings : skyWorldConfig.getDecorationSettingsList()) {
 			DynamicDecoration dynamicDecoration = null;
 
 			// TODO Any way to deal with the giant switch statement?

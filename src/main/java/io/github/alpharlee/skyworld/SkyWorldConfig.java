@@ -8,11 +8,14 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SkyWorldConfig {
+	private List<DecorationSettings> decorationSettingsList;
+
 	private static final String LAND_OCTAVES = "land.octaves";
 	private static final String LAND_SCALE = "land.scale";
 	private static final String LAND_Y_SCALE = "land.yScale";
@@ -29,7 +32,15 @@ public class SkyWorldConfig {
 
 	private final Map<String, FloatProperty> dynamicDecorationProperties;
 
-	public SkyWorldConfig(Plugin plugin, PropertyRegistry registry, List<DecorationSettings> decorationSettingsList) {
+	public SkyWorldConfig(Plugin plugin, PropertyRegistry registry, FileConfiguration config) {
+		decorationSettingsList = new ArrayList<>();
+
+		// TODO Apparently the easiest way to read a list of objects from config is just to do unsafe casting. Any better ways?
+		List<Map<String, Object>> decorationMaps = (List<Map<String, Object>>) config.get("decorations");
+		for (Map<String, Object> decorationMap : decorationMaps) {
+			decorationSettingsList.add(new DecorationSettings(decorationMap));
+		}
+
 		landOctaves = registry.getFloat(new NamespacedKey(plugin, LAND_OCTAVES), 8);
 		landScale = registry.getFloat(new NamespacedKey(plugin, LAND_SCALE), 0.004f);
 		landYScale = registry.getFloat(new NamespacedKey(plugin, LAND_Y_SCALE), 0.004f);
@@ -48,6 +59,10 @@ public class SkyWorldConfig {
 	private void setDynamicDecorationProperty(String key, float value, Plugin plugin, PropertyRegistry registry) {
 		final FloatProperty valProperty = registry.getFloat(new NamespacedKey(plugin, key), value);
 		dynamicDecorationProperties.put(key, valProperty);
+	}
+
+	public List<DecorationSettings> getDecorationSettingsList() {
+		return decorationSettingsList;
 	}
 
 	public void readConfig(WorldRef worldRef, FileConfiguration fileConfiguration) {
