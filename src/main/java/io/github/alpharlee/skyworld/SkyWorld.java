@@ -1,5 +1,6 @@
 package io.github.alpharlee.skyworld;
 
+import io.github.alpharlee.skyworld.commandhandler.CommandHandler;
 import io.github.alpharlee.skyworld.decoration.AirDecoration;
 import io.github.alpharlee.skyworld.decoration.DecorationSettings;
 import io.github.alpharlee.skyworld.decoration.DynamicDecoration;
@@ -27,6 +28,8 @@ public final class SkyWorld extends JavaPlugin {
 
 	private DecorationManager decorationManager;
 
+	private CommandHandler commandHandler;
+
 	@Override
 	public void onEnable() {
 		instance = this;
@@ -41,9 +44,11 @@ public final class SkyWorld extends JavaPlugin {
 
 		decorationManager = new DecorationManager(getConfig().getString("schematics", getDataFolder() + File.separator + "schematics"));
 //		decorationManager.loadDecorationsFromConfig(getConfig());
-		skyWorldConfig = new SkyWorldConfig(this, worldGeneratorApi.getPropertyRegistry(), getConfig());
+		skyWorldConfig = new SkyWorldConfig(this, worldGeneratorApi.getPropertyRegistry());
 
 		getServer().getPluginManager().registerEvents(new EventListener(skyWorldConfig), this);
+
+		this.commandHandler = new CommandHandler();
 	}
 
 	@Override
@@ -59,6 +64,10 @@ public final class SkyWorld extends JavaPlugin {
 		return decorationManager;
 	}
 
+	public SkyWorldConfig getSkyWorldConfig() {
+		return skyWorldConfig;
+	}
+
 	@Override
 	public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
 		// TODO Add id as parameter (make customizable terrain settings)
@@ -70,7 +79,6 @@ public final class SkyWorld extends JavaPlugin {
 			generator.setBaseTerrainGenerator(new SkyTerrainGenerator(generator.getWorldRef(), generator.getWorld(), skyWorldConfig));
 			generator.getWorldDecorator().withoutDefaultBaseDecorations(BaseDecorationType.CARVING_LIQUID);
 			generator.getWorldDecorator().withoutDefaultBaseDecorations(BaseDecorationType.BEDROCK);
-//			generator.getWorldDecorator().withCustomDecoration(DecorationType.SURFACE_STRUCTURES, new AirshipDecoration(generator.getWorld(), skyWorldConfig));
 
 			loadDynamicDecorations(generator.getWorldDecorator(), generator.getWorld());
 
@@ -83,7 +91,7 @@ public final class SkyWorld extends JavaPlugin {
 	}
 
 	private void loadDynamicDecorations(WorldDecorator worldDecorator, World world) {
-		for (DecorationSettings settings : skyWorldConfig.getDecorationSettingsList()) {
+		for (DecorationSettings settings : skyWorldConfig.getDecorationSettingsMap().values()) {
 			DynamicDecoration dynamicDecoration = null;
 
 			// TODO Any way to deal with the giant switch statement?
@@ -112,22 +120,7 @@ public final class SkyWorld extends JavaPlugin {
 			return false;
 		}
 
-		if (args.length < 1) {
-		// FIXME delete this
-			sender.sendMessage("SkyWorld debugger. Try paste");
-			return true;
-		}
-
-		// FIXME delete this
-		switch (args[0].toLowerCase()) {
-			case "save":
-				saveConfig();
-				sender.sendMessage("Config saved!");
-				return true;
-			case "paste":
-				pasteCmd(sender, args);
-				return true;
-		}
+		commandHandler.manageCommand(sender, CommandHandler.cmdArgs(args));
 
 		return true;
 	}

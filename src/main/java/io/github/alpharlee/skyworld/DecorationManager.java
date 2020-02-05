@@ -41,7 +41,7 @@ public class DecorationManager {
 //		}
 //	}
 //
-//	public List<DecorationSettings> getDecorationSettingsList() {
+//	public List<DecorationSettings> getDecorationSettingsMap() {
 //		return decorationSettingsList;
 //	}
 

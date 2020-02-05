@@ -1,6 +1,7 @@
 package io.github.alpharlee.skyworld;
 
 import io.github.alpharlee.skyworld.decoration.DecorationSettings;
+import io.github.alpharlee.skyworld.decoration.PlacementType;
 import nl.rutgerkok.worldgeneratorapi.WorldRef;
 import nl.rutgerkok.worldgeneratorapi.property.FloatProperty;
 import nl.rutgerkok.worldgeneratorapi.property.PropertyRegistry;
@@ -8,13 +9,12 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SkyWorldConfig {
-	private List<DecorationSettings> decorationSettingsList;
+	private Map<String, DecorationSettings> decorationSettingsMap;
 
 	private static final String LAND_OCTAVES = "land.octaves";
 	private static final String LAND_SCALE = "land.scale";
@@ -32,13 +32,14 @@ public class SkyWorldConfig {
 
 	private final Map<String, FloatProperty> dynamicDecorationProperties;
 
-	public SkyWorldConfig(Plugin plugin, PropertyRegistry registry, FileConfiguration config) {
-		decorationSettingsList = new ArrayList<>();
+	public SkyWorldConfig(Plugin plugin, PropertyRegistry registry) {
+		decorationSettingsMap = new HashMap<>();
 
 		// TODO Apparently the easiest way to read a list of objects from config is just to do unsafe casting. Any better ways?
-		List<Map<String, Object>> decorationMaps = (List<Map<String, Object>>) config.get("decorations");
-		for (Map<String, Object> decorationMap : decorationMaps) {
-			decorationSettingsList.add(new DecorationSettings(decorationMap));
+		List<Map<String, Object>> rawDecorationSettings = readRawDecorationSettings();
+		for (Map<String, Object> decorationMap : rawDecorationSettings) {
+			DecorationSettings decorationSettings = new DecorationSettings(decorationMap);
+			decorationSettingsMap.put(decorationSettings.name.toLowerCase(), decorationSettings);
 		}
 
 		landOctaves = registry.getFloat(new NamespacedKey(plugin, LAND_OCTAVES), 8);
@@ -49,11 +50,19 @@ public class SkyWorldConfig {
 		landThreshold = registry.getFloat(new NamespacedKey(plugin, LAND_THRESHOLD), 0.4f);
 
 		dynamicDecorationProperties = new HashMap<>();
-		for (DecorationSettings decorationSettings : decorationSettingsList ) {
+		for (DecorationSettings decorationSettings : decorationSettingsMap.values()) {
 			String name = decorationSettings.name;
 			setDynamicDecorationProperty(name + "." + "spawnChance", (float) decorationSettings.spawnChance, plugin, registry);
 			setDynamicDecorationProperty(name + "." + "spawnAttempts", (float) decorationSettings.spawnAttempts, plugin, registry);
 		}
+	}
+
+	private List<Map<String, Object>> readRawDecorationSettings() {
+		return (List<Map<String, Object>>) SkyWorld.getInstance().getConfig().get("decorations");
+	}
+
+	private void writeRawDecorationSettings(List<Map<String, Object>> rawDecorationSettings) {
+		SkyWorld.getInstance().getConfig().set("decorations", rawDecorationSettings);
 	}
 
 	private void setDynamicDecorationProperty(String key, float value, Plugin plugin, PropertyRegistry registry) {
@@ -61,8 +70,8 @@ public class SkyWorldConfig {
 		dynamicDecorationProperties.put(key, valProperty);
 	}
 
-	public List<DecorationSettings> getDecorationSettingsList() {
-		return decorationSettingsList;
+	public Map<String, DecorationSettings> getDecorationSettingsMap() {
+		return decorationSettingsMap;
 	}
 
 	public void readConfig(WorldRef worldRef, FileConfiguration fileConfiguration) {
@@ -81,6 +90,15 @@ public class SkyWorldConfig {
 		config.set(LAND_FREQUENCY, landFrequency.get(worldRef));
 		config.set(LAND_AMPLITUDE, landAmplitude.get(worldRef));
 		config.set(LAND_THRESHOLD, landThreshold.get(worldRef));
+	}
+
+	public void addDefaultDecorationSetting(String name) {
+		DecorationSettings settings = new DecorationSettings(name, PlacementType.AIR, "REPLACE_ME", 0.05, 5); // TODO validate these hardcoded default values
+		decorationSettingsMap.put(name.toLowerCase(), settings);
+
+		List<Map<String, Object>> rawDecorationSettings = readRawDecorationSettings();
+		rawDecorationSettings.add(settings.serialize());
+		writeRawDecorationSettings(rawDecorationSettings);
 	}
 
 	public final FloatProperty getLandOctaves() { return landOctaves; }
