@@ -43,8 +43,8 @@ public class DecorationSettings implements ConfigurationSerializable {
 	public Map<String, Object> serialize() {
 		Map<String, Object> output = new LinkedHashMap<>();
 		output.put("name", name);
-		output.put("placementType", placementType.getName());
-		output.put("schematicName", schematicName);
+		output.put("type", placementType.getName());
+		output.put("schematic", schematicName);
 		output.put("spawnChance", spawnChance);
 		output.put("spawnAttempts", spawnAttempts);
 
