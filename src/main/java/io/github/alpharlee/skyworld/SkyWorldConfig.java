@@ -1,11 +1,8 @@
 package io.github.alpharlee.skyworld;
 
-import io.github.alpharlee.skyworld.decoration.DecorationData;
-import io.github.alpharlee.skyworld.decoration.DecorationChunk;
 import io.github.alpharlee.skyworld.decoration.DecorationSettings;
 import nl.rutgerkok.worldgeneratorapi.WorldRef;
 import nl.rutgerkok.worldgeneratorapi.property.FloatProperty;
-import nl.rutgerkok.worldgeneratorapi.property.Property;
 import nl.rutgerkok.worldgeneratorapi.property.PropertyRegistry;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -30,8 +27,6 @@ public class SkyWorldConfig {
 	private final FloatProperty landAmplitude;
 	private final FloatProperty landThreshold;
 
-	private final Property<Map<DecorationChunk, List<DecorationData>>> decorationTargets;
-
 	private final Map<String, FloatProperty> dynamicDecorationProperties;
 
 	public SkyWorldConfig(Plugin plugin, PropertyRegistry registry, List<DecorationSettings> decorationSettingsList) {
@@ -41,8 +36,6 @@ public class SkyWorldConfig {
 		landFrequency = registry.getFloat(new NamespacedKey(plugin, LAND_FREQUENCY), 1.7f);
 		landAmplitude = registry.getFloat(new NamespacedKey(plugin, LAND_AMPLITUDE), 0.7f);
 		landThreshold = registry.getFloat(new NamespacedKey(plugin, LAND_THRESHOLD), 0.4f);
-
-		decorationTargets = registry.getProperty(new NamespacedKey(plugin, "decorationTargets"), new HashMap<DecorationChunk, List<DecorationData>>());
 
 		dynamicDecorationProperties = new HashMap<>();
 		for (DecorationSettings decorationSettings : decorationSettingsList ) {
@@ -84,10 +77,6 @@ public class SkyWorldConfig {
 
 	public final FloatProperty getDynamicDecorationProperty(String name, String property) {
 		return dynamicDecorationProperties.get(name + "." + property);
-	}
-
-	public Property<Map<DecorationChunk, List<DecorationData>>> getDecorationTargets() {
-		return decorationTargets;
 	}
 }
 
