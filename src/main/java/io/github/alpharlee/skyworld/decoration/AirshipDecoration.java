@@ -14,6 +14,7 @@ public class AirshipDecoration extends SkyWorldDecoration {
 	private SkyWorldConfig skyWorldConfig;
 
 	public AirshipDecoration(World world, SkyWorldConfig skyWorldConfig) {
+		super(WorldRef.of(world), skyWorldConfig);
 		this.worldRef = WorldRef.of(world);
 		this.skyWorldConfig = skyWorldConfig;
 

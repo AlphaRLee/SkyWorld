@@ -16,6 +16,7 @@ public abstract class DynamicDecoration extends SkyWorldDecoration {
 	protected final WorldRef worldRef;
 
 	public DynamicDecoration(String name, String schematicName, World world, SkyWorldConfig skyWorldConfig) {
+		super(WorldRef.of(world), skyWorldConfig);
 		this.name = name;
 		this.schematicName = schematicName;
 		this.skyWorldConfig = skyWorldConfig;

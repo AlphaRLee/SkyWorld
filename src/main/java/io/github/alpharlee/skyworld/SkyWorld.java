@@ -1,10 +1,8 @@
 package io.github.alpharlee.skyworld;
 
 import io.github.alpharlee.skyworld.decoration.AirDecoration;
-import io.github.alpharlee.skyworld.decoration.AirshipDecoration;
 import io.github.alpharlee.skyworld.decoration.DecorationSettings;
 import io.github.alpharlee.skyworld.decoration.DynamicDecoration;
-import nl.rutgerkok.worldgeneratorapi.WorldGenerator;
 import nl.rutgerkok.worldgeneratorapi.WorldGeneratorApi;
 import nl.rutgerkok.worldgeneratorapi.WorldRef;
 import nl.rutgerkok.worldgeneratorapi.decoration.BaseDecorationType;
@@ -45,7 +43,7 @@ public final class SkyWorld extends JavaPlugin {
 		decorationManager.loadDecorationsFromConfig(getConfig());
 		skyWorldConfig = new SkyWorldConfig(this, worldGeneratorApi.getPropertyRegistry(), decorationManager.getDecorationSettingsList());
 
-		getServer().getPluginManager().registerEvents(new EventListener(), this);
+		getServer().getPluginManager().registerEvents(new EventListener(skyWorldConfig), this);
 	}
 
 	@Override
@@ -154,7 +152,7 @@ public final class SkyWorld extends JavaPlugin {
 			z = (int) Math.floor(player.getLocation().getZ());
 		}
 
-		SkyWorld.getInstance().getDecorationManager().pasteSchematic(player.getWorld(), decorationName, x, y, z);
+		SkyWorld.getInstance().getDecorationManager().pasteSchematic(decorationName, player.getWorld(), x, y, z);
 
 		sender.sendMessage("Pasted " + decorationName + " at " + x + " " + y + " " + z);
 	}
