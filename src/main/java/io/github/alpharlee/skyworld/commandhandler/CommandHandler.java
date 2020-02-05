@@ -120,6 +120,10 @@ public class CommandHandler {
      * @author R Lee
      */
     public static String[] cmdArgs(String[] args) {
+    	if (args.length <= 1) {
+    		return new String[0];
+	    }
+
         //For Arrays.copyOfRange:
         //1st parameter: Original array list
         //2nd parameter: From index (inclusive)

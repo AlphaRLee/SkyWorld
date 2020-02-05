@@ -59,11 +59,16 @@ public class DecorationCommandHandler implements SubcommandHandler {
 				return false;
 			}
 
-			String name = args[1];
+			String name = args[0];
 			if (skyWorldConfig.getDecorationSettingsMap().containsKey(name.toLowerCase())) {
 				CommandHandler.sendError(sender, "Error: The decoration " + ChatColor.WHITE + name + ChatColor.RED + " already exists!");
 				return false;
 			}
+
+			skyWorldConfig.addDefaultDecorationSetting(name);
+			CommandHandler.sendMessage(sender, ChatColor.WHITE + name + ChatColor.GREEN + " has been added!",
+					ChatColor.YELLOW + "You need to " + ChatColor.BOLD + "set the schematic" + ChatColor.YELLOW + " next, by typing: ",
+					ChatColor.WHITE + "/skyworld decoration schematic schematic_name_here " + name);
 
 			return true;
 		}, "add");

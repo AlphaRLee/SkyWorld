@@ -99,6 +99,8 @@ public class SkyWorldConfig {
 		List<Map<String, Object>> rawDecorationSettings = readRawDecorationSettings();
 		rawDecorationSettings.add(settings.serialize());
 		writeRawDecorationSettings(rawDecorationSettings);
+
+		SkyWorld.getInstance().saveConfig();
 	}
 
 	public final FloatProperty getLandOctaves() { return landOctaves; }

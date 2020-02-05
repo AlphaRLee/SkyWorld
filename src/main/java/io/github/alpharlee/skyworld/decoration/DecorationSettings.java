@@ -3,6 +3,7 @@ package io.github.alpharlee.skyworld.decoration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DecorationSettings implements ConfigurationSerializable {
@@ -40,9 +41,9 @@ public class DecorationSettings implements ConfigurationSerializable {
 	 */
 	@Override
 	public Map<String, Object> serialize() {
-		Map<String, Object> output = new HashMap<>();
+		Map<String, Object> output = new LinkedHashMap<>();
 		output.put("name", name);
-		output.put("placementType", placementType);
+		output.put("placementType", placementType.getName());
 		output.put("schematicName", schematicName);
 		output.put("spawnChance", spawnChance);
 		output.put("spawnAttempts", spawnAttempts);

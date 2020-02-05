@@ -24,4 +24,8 @@ public enum PlacementType {
 	public static PlacementType get(String name) {
 		return nameLookup.get(name);
 	}
+
+	public String getName() {
+		return name;
+	}
 }

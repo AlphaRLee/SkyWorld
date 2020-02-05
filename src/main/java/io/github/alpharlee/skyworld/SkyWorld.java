@@ -120,7 +120,7 @@ public final class SkyWorld extends JavaPlugin {
 			return false;
 		}
 
-		commandHandler.manageCommand(sender, CommandHandler.cmdArgs(args));
+		commandHandler.manageCommand(sender, args);
 
 		return true;
 	}
