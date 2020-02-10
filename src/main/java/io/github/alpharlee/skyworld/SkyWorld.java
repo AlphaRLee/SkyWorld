@@ -4,6 +4,8 @@ import io.github.alpharlee.skyworld.commandhandler.CommandHandler;
 import io.github.alpharlee.skyworld.decoration.AirDecoration;
 import io.github.alpharlee.skyworld.decoration.DecorationSettings;
 import io.github.alpharlee.skyworld.decoration.DynamicDecoration;
+import io.github.alpharlee.skyworld.decoration.surfacedecoration.CeilingDecoration;
+import io.github.alpharlee.skyworld.decoration.surfacedecoration.FloorDecoration;
 import nl.rutgerkok.worldgeneratorapi.WorldGeneratorApi;
 import nl.rutgerkok.worldgeneratorapi.WorldRef;
 import nl.rutgerkok.worldgeneratorapi.decoration.BaseDecorationType;
@@ -100,10 +102,14 @@ public final class SkyWorld extends JavaPlugin {
 					dynamicDecoration = new AirDecoration(settings.name, settings.schematicName, world, skyWorldConfig);
 					break;
 				case FLOOR:
+					dynamicDecoration = new FloorDecoration(settings.name, settings.schematicName, world, skyWorldConfig);
 					break;
 				case CEILING:
+					dynamicDecoration = new CeilingDecoration(settings.name, settings.schematicName, world, skyWorldConfig);
 					break;
 				case WALL:
+					break;
+				case UNDERGROUND:
 					break;
 			}
 

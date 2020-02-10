@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public abstract class SkyWorldDecoration implements Decoration{
 	public static final int DATA_Y = 255;
@@ -35,5 +36,17 @@ public abstract class SkyWorldDecoration implements Decoration{
 		SpawnDecorationRunnable runnable = new SpawnDecorationRunnable(Bukkit.getWorld(worldRef.getName()), data);
 		final long ONE_SECOND = 20l;
 		runnable.runTaskTimer(SkyWorld.getInstance(), ONE_SECOND, ONE_SECOND);
+	}
+
+	/**
+	 * Get a random int that is suitable for x coordinate OR z coordinate
+	 * @return
+	 */
+	protected int getRandomX(DecorationArea area, Random random) {
+		return random.nextInt(2 * DecorationArea.DECORATION_RADIUS) - DecorationArea.DECORATION_RADIUS + area.getCenterX();
+	}
+
+	protected int getRandomZ(DecorationArea area, Random random) {
+		return random.nextInt(2 * DecorationArea.DECORATION_RADIUS) - DecorationArea.DECORATION_RADIUS + area.getCenterZ();
 	}
 }

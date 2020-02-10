@@ -3,7 +3,6 @@ package io.github.alpharlee.skyworld.decoration;
 import io.github.alpharlee.skyworld.SkyWorldConfig;
 import nl.rutgerkok.worldgeneratorapi.decoration.DecorationArea;
 import org.bukkit.World;
-import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 import java.util.Random;
 
@@ -35,8 +34,8 @@ public class AirDecoration extends DynamicDecoration {
 
 		int maxTestCount = (int) Math.floor(skyWorldConfig.getDynamicDecorationProperty(getName(), "spawnAttempts").get(worldRef));
 		for (int i = 0; i < maxTestCount; i++) {
-			int x = random.nextInt(2 * DecorationArea.DECORATION_RADIUS) - DecorationArea.DECORATION_RADIUS + area.getCenterX();
-			int z = random.nextInt(2 * DecorationArea.DECORATION_RADIUS) - DecorationArea.DECORATION_RADIUS + area.getCenterZ();
+			int x = getRandomX(area, random);
+			int z = getRandomZ(area, random);
 			int y = random.nextInt(maxSpawnHeight - minSpawnHeight) + minSpawnHeight;
 
 			if (shouldSpawn(x, y, z, random)) {
