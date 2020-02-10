@@ -136,4 +136,56 @@ public class CommandHandler {
     		subcommandMap.put(commandName, subcommand);
 	    }
     }
+
+    public static double toDouble(String value, Double min, Double max) throws IllegalArgumentException {
+        double output;
+        try {
+            output = Double.valueOf(value);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(ChatColor.RED + "Error: Cannot convert " + ChatColor.WHITE + value + ChatColor.RED + " to a number.");
+        }
+
+        String errorMsg = ChatColor.RED + "Error: Value must be ";
+        if (min == null && max == null) {
+        	return output;
+        } else if (min == null && output > max) {
+        	errorMsg += "less than " + ChatColor.WHITE + max + ChatColor.RED + ".";;
+        } else if (output < min && max == null) {
+	        errorMsg += "greater than " + ChatColor.WHITE + max + ChatColor.RED + ".";;
+        } else {
+        	if (output >= min && output <= max) {
+        		return output;
+	        } else {
+        		errorMsg += "between " + ChatColor.WHITE + min + ChatColor.RED + " and " + ChatColor.WHITE + max + ChatColor.RED + ".";
+	        }
+        }
+
+		throw new IllegalArgumentException(errorMsg);
+    }
+
+    public static int toInt(String value, Integer min, Integer max) throws IllegalArgumentException {
+	    int output;
+	    try {
+		    output = Integer.valueOf(value);
+	    } catch (NumberFormatException e) {
+		    throw new IllegalArgumentException(ChatColor.RED + "Error: Cannot convert " + ChatColor.WHITE + value + ChatColor.RED + " to an integer.");
+	    }
+
+	    String errorMsg = ChatColor.RED + "Error: Value must be ";
+	    if (min == null && max == null) {
+		    return output;
+	    } else if (min == null && output > max) {
+		    errorMsg += "less than " + ChatColor.WHITE + max + ChatColor.RED + ".";;
+	    } else if (output < min && max == null) {
+		    errorMsg += "greater than " + ChatColor.WHITE + max + ChatColor.RED + ".";;
+	    } else {
+		    if (output >= min && output <= max) {
+			    return output;
+		    } else {
+			    errorMsg += "between " + ChatColor.WHITE + min + ChatColor.RED + " and " + ChatColor.WHITE + max + ChatColor.RED + ".";
+		    }
+	    }
+
+	    throw new IllegalArgumentException(errorMsg);
+    }
 }

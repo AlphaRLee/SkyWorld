@@ -7,7 +7,8 @@ public enum PlacementType {
 	AIR("air"),
 	FLOOR("floor"),
 	CEILING("ceiling"),
-	WALL("wall");
+	WALL("wall"),
+	UNDERGROUND("underground");
 
 	private static Map<String, PlacementType> nameLookup = new HashMap<>();
 	static {

@@ -5,12 +5,12 @@ import io.github.alpharlee.skyworld.SkyWorldConfig;
 import io.github.alpharlee.skyworld.commandhandler.CommandHandler;
 import io.github.alpharlee.skyworld.commandhandler.SubcommandHandler;
 import io.github.alpharlee.skyworld.decoration.DecorationSettings;
+import io.github.alpharlee.skyworld.decoration.PlacementType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class DecorationCommandHandler implements SubcommandHandler {
 	private class HelpCommand implements SubcommandHandler {
@@ -72,6 +72,62 @@ public class DecorationCommandHandler implements SubcommandHandler {
 
 			return true;
 		}, "add");
+
+		CommandHandler.alias(subcommands, (sender, args) -> {
+			if (args.length < 1) {
+				CommandHandler.sendError(sender, "Usage: /skyworld decoration remove <NAME>");
+				return false;
+			}
+
+			// FIXME add code to delete
+			CommandHandler.sendMessage(sender, ChatColor.LIGHT_PURPLE + "!!! This feature is not implemented yet");
+			return true;
+		}, "remove", "delete");
+
+		CommandHandler.alias(subcommands, (sender, args) -> {
+			if (args.length < 1) {
+				CommandHandler.sendError(sender, "Usage: /skyworld decoration type <NAME> [air|floor|ceiling|wall]");
+				return false;
+			}
+
+			String name = args[0];
+			DecorationSettings settings = skyWorldConfig.getDynamicDecorationSettings(name);
+			if (settings == null) {
+				CommandHandler.sendError(sender, "Error: Could not find decoration named " + ChatColor.WHITE + name + ChatColor.RED + ".");
+				return false;
+			}
+
+			if (args.length < 2) {
+				// Get request
+				String typeStr = settings.placementType.getName();
+				CommandHandler.sendMessage(sender, ChatColor.YELLOW + "Decoration " + ChatColor.WHITE + settings.name
+						+ ChatColor.YELLOW + " has placement type " + ChatColor.WHITE + typeStr + ChatColor.YELLOW + ".");
+
+				return true;
+			}
+
+			// Verify input placementType
+			String value = args[1];
+			PlacementType placementType = PlacementType.get(value);
+			if (placementType == null) {
+				List<String> validTypeNames = Arrays.stream(PlacementType.values())
+						.map(e -> e.getName().toUpperCase())
+						.collect(Collectors.toList());
+
+				CommandHandler.sendError(sender, "Error, placement type " + ChatColor.WHITE + value + ChatColor.RED + " not recognized.",
+						ChatColor.RED + "Valid options include: " + String.join(", ", validTypeNames));
+				return false;
+			}
+
+			// Set placement type
+			skyWorldConfig.setDecorationConfigSetting(name, "type", placementType.getName().toLowerCase());
+			CommandHandler.sendMessage(sender, ChatColor.GREEN + "Placement type of " + settings.name
+							+ ChatColor.GREEN + " has been set to " + ChatColor.WHITE + placementType.getName().toUpperCase() + ChatColor.GREEN + ".",
+					ChatColor.YELLOW + "You must " + ChatColor.BOLD + "restart your server" + ChatColor.YELLOW + " for changes to take effect.");
+
+			return true;
+		}, "type");
+
 	}
 
 	@Override
@@ -89,6 +145,4 @@ public class DecorationCommandHandler implements SubcommandHandler {
 
 		return subcommand.onSubcommand(sender, CommandHandler.cmdArgs(args));
 	}
-
-
 }

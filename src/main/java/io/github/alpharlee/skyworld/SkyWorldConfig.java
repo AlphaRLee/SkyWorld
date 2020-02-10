@@ -113,5 +113,25 @@ public class SkyWorldConfig {
 	public final FloatProperty getDynamicDecorationProperty(String name, String property) {
 		return dynamicDecorationProperties.get(name + "." + property);
 	}
+
+	public final DecorationSettings getDynamicDecorationSettings(String name) {
+		return decorationSettingsMap.get(name.toLowerCase());
+	}
+
+	public void setDynamicDecorationProperty(String name, String property, float value) {
+		getDynamicDecorationProperty(name, property).setDefault(value);
+		setDecorationConfigSetting(name, property, value);
+	}
+
+	public void setDecorationConfigSetting(String name, String property, Object value) {
+		List<Map<String, Object>> rawDecorationSettings = readRawDecorationSettings();
+		for (Map<String, Object> settings : rawDecorationSettings) {
+			if (((String) settings.get("name")).equalsIgnoreCase(name)) {
+				settings.put(property, value);
+			}
+		}
+
+		writeRawDecorationSettings(rawDecorationSettings);
+	}
 }
 
