@@ -85,8 +85,12 @@ public class DecorationCommandHandler implements SubcommandHandler {
 		}, "remove", "delete");
 
 		CommandHandler.alias(subcommands, (sender, args) -> {
+			List<String> validTypeNames = Arrays.stream(PlacementType.values())
+					.map(e -> e.getName().toUpperCase())
+					.collect(Collectors.toList());
+
 			if (args.length < 1) {
-				CommandHandler.sendError(sender, "Usage: /skyworld decoration type <NAME> [air|floor|ceiling|wall]");
+				CommandHandler.sendError(sender, "Usage: /skyworld decoration type <NAME> [" + String.join(" | ", validTypeNames) + "]");
 				return false;
 			}
 
@@ -108,14 +112,10 @@ public class DecorationCommandHandler implements SubcommandHandler {
 
 			// Verify input placementType
 			String value = args[1];
-			PlacementType placementType = PlacementType.get(value);
+			PlacementType placementType = PlacementType.get(value.toLowerCase());
 			if (placementType == null) {
-				List<String> validTypeNames = Arrays.stream(PlacementType.values())
-						.map(e -> e.getName().toUpperCase())
-						.collect(Collectors.toList());
-
 				CommandHandler.sendError(sender, "Error, placement type " + ChatColor.WHITE + value + ChatColor.RED + " not recognized.",
-						ChatColor.RED + "Valid options include: " + String.join(", ", validTypeNames));
+						ChatColor.RED + "Valid options are: " + String.join(", ", validTypeNames));
 				return false;
 			}
 

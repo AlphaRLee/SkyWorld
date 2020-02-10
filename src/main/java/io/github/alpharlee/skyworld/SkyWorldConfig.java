@@ -63,6 +63,7 @@ public class SkyWorldConfig {
 
 	private void writeRawDecorationSettings(List<Map<String, Object>> rawDecorationSettings) {
 		SkyWorld.getInstance().getConfig().set("decorations", rawDecorationSettings);
+		SkyWorld.getInstance().saveConfig();
 	}
 
 	private void setDynamicDecorationProperty(String key, float value, Plugin plugin, PropertyRegistry registry) {
