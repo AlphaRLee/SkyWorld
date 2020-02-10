@@ -26,9 +26,11 @@ public class CommandHandler {
      * @author R Lee
      */
     public boolean manageCommand(CommandSender sender, String[] args) {
-        boolean result = true;
+	    if (!sender.hasPermission("skyworld.command")) {
+	    	return false;
+	    }
 
-	    if (args.length < 1) {
+    	if (args.length < 1) {
 		    sendError(sender, "Please type /skyworld help for a list of commands.");
 		    return false;
 	    }
@@ -42,7 +44,7 @@ public class CommandHandler {
 
         subcommand.onSubcommand(sender, cmdArgs(args));
 
-        return result;
+        return true;
     }
 
     /**
