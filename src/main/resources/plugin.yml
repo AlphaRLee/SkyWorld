@@ -12,3 +12,6 @@ commands:
   skyworld:
     aliases: [sw]
     description: Debugger for skyworld generator
+permissions:
+  skyworld.command:
+    description: General permission for /skyworld command
