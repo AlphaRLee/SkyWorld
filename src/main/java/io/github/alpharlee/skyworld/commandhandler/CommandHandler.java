@@ -14,7 +14,7 @@ public class CommandHandler {
 
     static {
         subcommands = new HashMap<>();
-        alias(subcommands, new DecorationCommandHandler(), "decoration", "dec", "structure", "struct");
+        assignCommand(subcommands, new DecorationCommandHandler(), "decoration", "dec", "structure", "struct");
     }
 
     /**
@@ -133,7 +133,7 @@ public class CommandHandler {
         return Arrays.copyOfRange(args, 1, args.length);
     }
 
-    public static void alias(Map<String, SubcommandHandler> subcommandMap, SubcommandHandler subcommand, String... commandNames) {
+    public static void assignCommand(Map<String, SubcommandHandler> subcommandMap, SubcommandHandler subcommand, String... commandNames) {
     	for (String commandName : commandNames) {
     		subcommandMap.put(commandName, subcommand);
 	    }
@@ -148,19 +148,25 @@ public class CommandHandler {
         }
 
         String errorMsg = ChatColor.RED + "Error: Value must be ";
-        if (min == null && max == null) {
-        	return output;
-        } else if (min == null && output > max) {
-        	errorMsg += "less than " + ChatColor.WHITE + max + ChatColor.RED + ".";;
-        } else if (output < min && max == null) {
-	        errorMsg += "greater than " + ChatColor.WHITE + max + ChatColor.RED + ".";;
-        } else {
-        	if (output >= min && output <= max) {
-        		return output;
-	        } else {
-        		errorMsg += "between " + ChatColor.WHITE + min + ChatColor.RED + " and " + ChatColor.WHITE + max + ChatColor.RED + ".";
-	        }
-        }
+	    if (min == null && max == null) {
+		    return output;
+	    } else if (min == null) {
+		    if (output <= max) {
+			    return output;
+		    }
+		    errorMsg += "less than " + ChatColor.WHITE + max + ChatColor.RED + ".";;
+	    } else if (max == null) {
+		    if (output >= min) {
+			    return output;
+		    }
+		    errorMsg += "greater than " + ChatColor.WHITE + max + ChatColor.RED + ".";;
+	    } else {
+		    if (output >= min && output <= max) {
+			    return output;
+		    } else {
+			    errorMsg += "between " + ChatColor.WHITE + min + ChatColor.RED + " and " + ChatColor.WHITE + max + ChatColor.RED + ".";
+		    }
+	    }
 
 		throw new IllegalArgumentException(errorMsg);
     }
@@ -176,9 +182,15 @@ public class CommandHandler {
 	    String errorMsg = ChatColor.RED + "Error: Value must be ";
 	    if (min == null && max == null) {
 		    return output;
-	    } else if (min == null && output > max) {
+	    } else if (min == null) {
+	    	if (output <= max) {
+	    		return output;
+		    }
 		    errorMsg += "less than " + ChatColor.WHITE + max + ChatColor.RED + ".";;
-	    } else if (output < min && max == null) {
+	    } else if (max == null) {
+	    	if (output >= min) {
+	    		return output;
+		    }
 		    errorMsg += "greater than " + ChatColor.WHITE + max + ChatColor.RED + ".";;
 	    } else {
 		    if (output >= min && output <= max) {

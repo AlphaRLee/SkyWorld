@@ -43,6 +43,10 @@ public abstract class SurfaceDecoration extends DynamicDecoration {
 		final double probability = (double) skyWorldConfig.getDynamicDecorationProperty(getName(), "spawnChance").get(worldRef);
 
 		for (int i = 0; i < maxTestCount; i++) {
+			if (random.nextDouble() > probability) {
+				continue;
+			}
+
 			Vector position = new Vector(getRandomX(area, random), random.nextInt(255), getRandomZ(area, random));
 			Vector searchDirection = getSearchDirection();
 			int searchDistance = 0;
@@ -64,7 +68,7 @@ public abstract class SurfaceDecoration extends DynamicDecoration {
 				position.add(searchDirection);
 			}
 
-			if (isValid && random.nextDouble() <= probability) {
+			if (isValid) {
 				spawn(position.getBlockX(), position.getBlockY(), position.getBlockZ(), getAngle());
 			}
 		}

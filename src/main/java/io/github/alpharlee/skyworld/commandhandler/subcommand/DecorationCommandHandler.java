@@ -20,10 +20,10 @@ public class DecorationCommandHandler implements SubcommandHandler {
 					ChatColor.YELLOW + "/skyworld decoration list",
 					ChatColor.YELLOW + "/skyworld decoration add myDecoration",
 					ChatColor.YELLOW + "/skyworld decoration remove myDecoration",
-					ChatColor.YELLOW + "/skyworld decoration type air myDecoration",
-					ChatColor.YELLOW + "/skyworld decoration schematic my_thing_file myDecoration",
-					ChatColor.YELLOW + "/skyworld decoration spawnchance 0.01 myDecoration",
-					ChatColor.YELLOW + "/skyworld decoration spawnAttempts 5 myDecoration"
+					ChatColor.YELLOW + "/skyworld decoration type myDecoration air",
+					ChatColor.YELLOW + "/skyworld decoration schematic myDecoration my_schem_file",
+					ChatColor.YELLOW + "/skyworld decoration spawnchance myDecoration 0.01",
+					ChatColor.YELLOW + "/skyworld decoration spawnattempts myDecoration 5"
 			);
 
 			return true;
@@ -39,10 +39,10 @@ public class DecorationCommandHandler implements SubcommandHandler {
 
 		SkyWorldConfig skyWorldConfig = SkyWorld.getInstance().getSkyWorldConfig();
 
-		CommandHandler.alias(subcommands, helpCommand, "help", "?");
+		CommandHandler.assignCommand(subcommands, helpCommand, "help", "?");
 
 		// List command
-		CommandHandler.alias(subcommands, (sender, args) -> {
+		CommandHandler.assignCommand(subcommands, (sender, args) -> {
 			Map<String, DecorationSettings> decorations = skyWorldConfig.getDecorationSettingsMap();
 
 			CommandHandler.sendMessage(sender, ChatColor.YELLOW + "Decorations in SkyWorld:");
@@ -53,7 +53,8 @@ public class DecorationCommandHandler implements SubcommandHandler {
 			return true;
 		}, "list");
 
-		CommandHandler.alias(subcommands, (sender, args) -> {
+		// Add command
+		CommandHandler.assignCommand(subcommands, (sender, args) -> {
 			if (args.length < 1) {
 				CommandHandler.sendError(sender, "Usage: /skyworld decoration add <NAME>");
 				return false;
@@ -68,12 +69,13 @@ public class DecorationCommandHandler implements SubcommandHandler {
 			skyWorldConfig.addDefaultDecorationSetting(name);
 			CommandHandler.sendMessage(sender, ChatColor.WHITE + name + ChatColor.GREEN + " has been added!",
 					ChatColor.YELLOW + "You need to " + ChatColor.BOLD + "set the schematic" + ChatColor.YELLOW + " next, by typing: ",
-					ChatColor.WHITE + "/skyworld decoration schematic schematic_name_here " + name);
+					ChatColor.WHITE + "/skyworld decoration schematic " + name + " schematic_name_here");
 
 			return true;
 		}, "add");
 
-		CommandHandler.alias(subcommands, (sender, args) -> {
+		// Remove command
+		CommandHandler.assignCommand(subcommands, (sender, args) -> {
 			if (args.length < 1) {
 				CommandHandler.sendError(sender, "Usage: /skyworld decoration remove <NAME>");
 				return false;
@@ -84,7 +86,8 @@ public class DecorationCommandHandler implements SubcommandHandler {
 			return true;
 		}, "remove", "delete");
 
-		CommandHandler.alias(subcommands, (sender, args) -> {
+		// Placement type command
+		CommandHandler.assignCommand(subcommands, (sender, args) -> {
 			List<String> validTypeNames = Arrays.stream(PlacementType.values())
 					.map(e -> e.getName().toUpperCase())
 					.collect(Collectors.toList());
@@ -128,6 +131,133 @@ public class DecorationCommandHandler implements SubcommandHandler {
 			return true;
 		}, "type");
 
+		// Schematic command
+		CommandHandler.assignCommand(subcommands, (sender, args) -> {
+			List<String> validTypeNames = Arrays.stream(PlacementType.values())
+					.map(e -> e.getName().toUpperCase())
+					.collect(Collectors.toList());
+
+			if (args.length < 1) {
+				CommandHandler.sendError(sender, "Usage: /skyworld decoration schematic <NAME> [SCHEMATIC]");
+				return false;
+			}
+
+			String name = args[0];
+			DecorationSettings settings = skyWorldConfig.getDynamicDecorationSettings(name);
+			if (settings == null) {
+				CommandHandler.sendError(sender, "Error: Could not find decoration named " + ChatColor.WHITE + name + ChatColor.RED + ".");
+				return false;
+			}
+
+			if (args.length < 2) {
+				// Get request
+
+				CommandHandler.sendMessage(sender, ChatColor.YELLOW + "Decoration " + ChatColor.WHITE + settings.name
+						+ ChatColor.YELLOW + " has schematic " + ChatColor.WHITE + settings.schematicName + ChatColor.YELLOW + ".");
+				return true;
+			}
+
+			// Get input of placement type
+			String value = args[1];
+
+			// Set schematic
+			skyWorldConfig.setDecorationConfigSetting(name, "schematic", value);
+			CommandHandler.sendMessage(sender, ChatColor.GREEN + "Schematic of " + settings.name
+							+ ChatColor.GREEN + " has been set to " + ChatColor.WHITE + value + ChatColor.GREEN + ".",
+					ChatColor.YELLOW + "You must " + ChatColor.BOLD + "restart your server" + ChatColor.YELLOW + " for changes to take effect.");
+
+			return true;
+		}, "schematic", "schem");
+
+		// Chance command
+		CommandHandler.assignCommand(subcommands, (sender, args) -> {
+			List<String> validTypeNames = Arrays.stream(PlacementType.values())
+					.map(e -> e.getName().toUpperCase())
+					.collect(Collectors.toList());
+
+			if (args.length < 1) {
+				CommandHandler.sendError(sender, "Usage: /skyworld decoration chance <NAME> [PROBABILITY]");
+				return false;
+			}
+
+			String name = args[0];
+			DecorationSettings settings = skyWorldConfig.getDynamicDecorationSettings(name);
+			if (settings == null) {
+				CommandHandler.sendError(sender, "Error: Could not find decoration named " + ChatColor.WHITE + name + ChatColor.RED + ".");
+				return false;
+			}
+
+			if (args.length < 2) {
+				// Get request
+
+				CommandHandler.sendMessage(sender, ChatColor.YELLOW + "Decoration " + ChatColor.WHITE + settings.name
+						+ ChatColor.YELLOW + " has spawn chance of " + ChatColor.WHITE + settings.spawnChance + ChatColor.YELLOW + ".");
+				return true;
+			}
+
+			// Get input of spawn chance
+			String strValue = args[1];
+			double spawnChance;
+			try {
+				spawnChance = CommandHandler.toDouble(strValue, 0d, 1d);
+			} catch (IllegalArgumentException e) {
+				CommandHandler.sendError(sender, e.getMessage());
+				return false;
+			}
+
+			// Set spawn chance
+			skyWorldConfig.setDynamicDecorationProperty(name, "spawnChance", (float) spawnChance);
+			CommandHandler.sendMessage(sender, ChatColor.GREEN + "Spawn chance of " + settings.name
+							+ ChatColor.GREEN + " has been set to " + ChatColor.WHITE + spawnChance + ChatColor.GREEN + ".",
+					ChatColor.YELLOW + "You must " + ChatColor.BOLD + "restart your server" + ChatColor.YELLOW + " for changes to take effect.");
+
+			return true;
+		}, "spawnchance", "chance", "probability");
+
+		// Spawn attempts command
+		CommandHandler.assignCommand(subcommands, (sender, args) -> {
+			List<String> validTypeNames = Arrays.stream(PlacementType.values())
+					.map(e -> e.getName().toUpperCase())
+					.collect(Collectors.toList());
+
+			if (args.length < 1) {
+				CommandHandler.sendError(sender, "Usage: /skyworld decoration chance <NAME> [SPAWN ATTEMPTS]");
+				return false;
+			}
+
+			String name = args[0];
+			DecorationSettings settings = skyWorldConfig.getDynamicDecorationSettings(name);
+			if (settings == null) {
+				CommandHandler.sendError(sender, "Error: Could not find decoration named " + ChatColor.WHITE + name + ChatColor.RED + ".");
+				return false;
+			}
+
+			if (args.length < 2) {
+				// Get request
+
+				CommandHandler.sendMessage(sender, ChatColor.YELLOW + "Decoration " + ChatColor.WHITE + settings.name
+						+ ChatColor.YELLOW + " has spawn attempts of " + ChatColor.WHITE + settings.spawnAttempts + ChatColor.YELLOW + ".");
+				return true;
+			}
+
+			// Get input of spawn chance
+			String strValue = args[1];
+			int spawnAttempts;
+			try {
+				spawnAttempts = CommandHandler.toInt(strValue, 0, null);
+			} catch (IllegalArgumentException e) {
+				CommandHandler.sendError(sender, e.getMessage());
+				return false;
+			}
+
+			// Set spawn attempts
+			skyWorldConfig.setDynamicDecorationProperty(name, "spawnAttempts", (float) spawnAttempts);
+			CommandHandler.sendMessage(sender, ChatColor.GREEN + "Spawn attempts of " + settings.name
+					+ ChatColor.GREEN + " has been set to " + ChatColor.WHITE + spawnAttempts + ChatColor.GREEN + ".",
+					ChatColor.YELLOW + "You must " + ChatColor.BOLD + "restart your server" + ChatColor.YELLOW + " for changes to take effect.");
+
+			return true;
+		}, "attempts", "spawnattempts");
 	}
 
 	@Override
