@@ -4,8 +4,10 @@ import io.github.alpharlee.skyworld.commandhandler.CommandHandler;
 import io.github.alpharlee.skyworld.decoration.AirDecoration;
 import io.github.alpharlee.skyworld.decoration.DecorationSettings;
 import io.github.alpharlee.skyworld.decoration.DynamicDecoration;
+import io.github.alpharlee.skyworld.decoration.UndergroundDecoration;
 import io.github.alpharlee.skyworld.decoration.surfacedecoration.CeilingDecoration;
 import io.github.alpharlee.skyworld.decoration.surfacedecoration.FloorDecoration;
+import io.github.alpharlee.skyworld.decoration.surfacedecoration.WallDecoration;
 import nl.rutgerkok.worldgeneratorapi.WorldGeneratorApi;
 import nl.rutgerkok.worldgeneratorapi.WorldRef;
 import nl.rutgerkok.worldgeneratorapi.decoration.BaseDecorationType;
@@ -108,8 +110,10 @@ public final class SkyWorld extends JavaPlugin {
 					dynamicDecoration = new CeilingDecoration(settings.name, settings.schematicName, world, skyWorldConfig);
 					break;
 				case WALL:
+					dynamicDecoration = new WallDecoration(settings.name, settings.schematicName, world, skyWorldConfig);
 					break;
 				case UNDERGROUND:
+					dynamicDecoration = new UndergroundDecoration(settings.name, settings.schematicName, world, skyWorldConfig);
 					break;
 			}
 
@@ -126,34 +130,7 @@ public final class SkyWorld extends JavaPlugin {
 			return false;
 		}
 
-		commandHandler.manageCommand(sender, args);
-
-		return true;
-	}
-
-	private void pasteCmd(CommandSender sender, String[] args) {
-		Player player = (Player) sender;
-		if (args.length < 2) {
-			sender.sendMessage("Usage: /sw paste schematicName x y z");
-			return;
-		}
-
-		String decorationName = args[1];
-
-		int x, y, z;
-		if (args.length >= 4) {
-			x = Integer.valueOf(args[2]);
-			y = Integer.valueOf(args[3]);
-			z = Integer.valueOf(args[4]);
-		} else {
-			x = (int) Math.floor(player.getLocation().getX());
-			y = (int) Math.floor(player.getLocation().getY());
-			z = (int) Math.floor(player.getLocation().getZ());
-		}
-
-		SkyWorld.getInstance().getDecorationManager().pasteSchematic(decorationName, player.getWorld(), x, y, z);
-
-		sender.sendMessage("Pasted " + decorationName + " at " + x + " " + y + " " + z);
+		return commandHandler.manageCommand(sender, args);
 	}
 
 	private void setupFileStructure() {

@@ -39,7 +39,7 @@ public class AirDecoration extends DynamicDecoration {
 			int y = random.nextInt(maxSpawnHeight - minSpawnHeight) + minSpawnHeight;
 
 			if (shouldSpawn(x, y, z, random)) {
-				spawn(area, x, y, z);
+				spawn(x, y, z);
 			}
 		}
 	}
@@ -48,7 +48,7 @@ public class AirDecoration extends DynamicDecoration {
 		double landFrequency = (double) skyWorldConfig.getLandFrequency().get(worldRef);
 		double landAmplitude = (double) skyWorldConfig.getLandAmplitude().get(worldRef);
 
-		double spawnThreshold = -0.5;
+		double spawnThreshold = -0.6;
 		double probability = (double) skyWorldConfig.getDynamicDecorationProperty(getName(), "spawnChance").get(worldRef);
 
 		return random.nextDouble() <= probability && terrainTester.noise(x, y, z, landFrequency, landAmplitude, true) <= spawnThreshold;

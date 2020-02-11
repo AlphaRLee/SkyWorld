@@ -52,10 +52,9 @@ public class DecorationManager {
 		this.schematicsDirName = schematicsDirName + File.separator;
 	}
 
-	public void pasteSchematic(String schematicName, World world, int x, int y, int z) {
+	public void pasteSchematic(String schematicName, World world, int x, int y, int z, double angle) {
 		com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);;
 
-//		String schematicsDirName = SkyWorld.getInstance().getDataFolder() + File.separator + "schematics"; // FIXME delete
 		File schemFile = new File(schematicsDirName + schematicName + ".schem");
 
 		ClipboardFormat format = ClipboardFormats.findByFile(schemFile);
@@ -75,7 +74,7 @@ public class DecorationManager {
 
 		try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(weWorld, -1)) {
 			AffineTransform rotationTransform = new AffineTransform();
-			rotationTransform = rotationTransform.rotateY(Math.floor(Math.random() * 4) * 90);
+			rotationTransform = rotationTransform.rotateY(angle);
  			ClipboardHolder rotatedHolder = new ClipboardHolder(clipboard);
 			rotatedHolder.setTransform(rotatedHolder.getTransform().combine(rotationTransform));
 			Operation operation = rotatedHolder

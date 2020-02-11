@@ -16,6 +16,10 @@ public abstract class SurfaceDecoration extends DynamicDecoration {
 
 	protected abstract Vector getSearchDirection();
 
+	protected double getAngle() {
+		return Math.floor(Math.random() * 4) * 90;
+	}
+
 	/**
 	 * Decorates a 16x16 area. See the documentation of {@link DecorationArea} for
 	 * where exactly you should place objects.
@@ -44,7 +48,8 @@ public abstract class SurfaceDecoration extends DynamicDecoration {
 			int searchDistance = 0;
 			boolean isValid = false;
 			boolean lastBlockAir = false;
-			while (position.getBlockY() > 0 && searchDistance < maxSearchDistance && !isValid) {
+
+			while (searchDistance < maxSearchDistance && inDecorationArea(area, position)) {
 				// Hit land
 				if (area.getBlock(position.getBlockX(), position.getBlockY(), position.getBlockZ()) != Material.AIR) {
 					// Hit land or started in land?
@@ -60,8 +65,17 @@ public abstract class SurfaceDecoration extends DynamicDecoration {
 			}
 
 			if (isValid && random.nextDouble() <= probability) {
-				spawn(area, position.getBlockX(), position.getBlockY(), position.getBlockZ());
+				spawn(position.getBlockX(), position.getBlockY(), position.getBlockZ(), getAngle());
 			}
 		}
+	}
+
+	private boolean inDecorationArea(DecorationArea area, Vector position) {
+		int dx = Math.abs(position.getBlockX() - area.getCenterX());
+		int dz = Math.abs(position.getBlockZ() - area.getCenterZ());
+		return dx <= DecorationArea.DECORATION_RADIUS * 2
+				&& dz <= DecorationArea.DECORATION_RADIUS * 2
+				&& position.getBlockY() > 10 // TODO Modify to ensure in bounds
+				&& position.getBlockY() <= 180; // TODO Modify to ensure in bounds
 	}
 }

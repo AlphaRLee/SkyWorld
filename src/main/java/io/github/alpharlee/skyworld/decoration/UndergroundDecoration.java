@@ -1,25 +1,14 @@
 package io.github.alpharlee.skyworld.decoration;
 
 import io.github.alpharlee.skyworld.SkyWorldConfig;
-import nl.rutgerkok.worldgeneratorapi.WorldRef;
 import nl.rutgerkok.worldgeneratorapi.decoration.DecorationArea;
 import org.bukkit.World;
-import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 import java.util.Random;
 
-public class AirshipDecoration extends SkyWorldDecoration {
-	private final WorldRef worldRef;
-	private SimplexOctaveGenerator terrainTester;
-	private SkyWorldConfig skyWorldConfig;
-
-	public AirshipDecoration(World world, SkyWorldConfig skyWorldConfig) {
-		super(WorldRef.of(world), skyWorldConfig);
-		this.worldRef = WorldRef.of(world);
-		this.skyWorldConfig = skyWorldConfig;
-
-		int landOctaves = (int) skyWorldConfig.getLandOctaves().get(worldRef);
-		terrainTester = new SimplexOctaveGenerator(new Random(world.getSeed()), landOctaves);
+public class UndergroundDecoration extends DynamicDecoration {
+	public UndergroundDecoration(String name, String schematicName, World world, SkyWorldConfig skyWorldConfig) {
+		super(name, schematicName, world, skyWorldConfig);
 	}
 
 	/**
@@ -29,7 +18,7 @@ public class AirshipDecoration extends SkyWorldDecoration {
 	 * <p>
 	 * Note: <strong>this method can be called on any thread</strong>, including the
 	 * main server thread. As long as you only use the methods contained in the
-	 * decoration area and in the propertyRegistry,
+	 * decoration area and in the PropertyRegistry property registry,
 	 * there's no need to worry about this. However, if you use/call code from other
 	 * areas (like the rest of the world or an ordinary hash map from your plugin)
 	 * you will get into trouble. Exceptions may be thrown, or worse: your world may
@@ -43,14 +32,14 @@ public class AirshipDecoration extends SkyWorldDecoration {
 		int minSpawnHeight = 16;
 		int maxSpawnHeight = 180;
 
-		int maxTestCount = 10;
+		int maxTestCount = (int) Math.floor(skyWorldConfig.getDynamicDecorationProperty(getName(), "spawnAttempts").get(worldRef));
 		for (int i = 0; i < maxTestCount; i++) {
-			int x = random.nextInt(2 * DecorationArea.DECORATION_RADIUS) - DecorationArea.DECORATION_RADIUS + area.getCenterX();
-			int z = random.nextInt(2 * DecorationArea.DECORATION_RADIUS) - DecorationArea.DECORATION_RADIUS + area.getCenterZ();
+			int x = getRandomX(area, random);
+			int z = getRandomZ(area, random);
 			int y = random.nextInt(maxSpawnHeight - minSpawnHeight) + minSpawnHeight;
 
 			if (shouldSpawn(x, y, z, random)) {
-				spawn(area, x, y, z);
+				spawn(x, y, z);
 			}
 		}
 	}
@@ -59,15 +48,9 @@ public class AirshipDecoration extends SkyWorldDecoration {
 		double landFrequency = (double) skyWorldConfig.getLandFrequency().get(worldRef);
 		double landAmplitude = (double) skyWorldConfig.getLandAmplitude().get(worldRef);
 
-		double spawnThreshold = -0.5;
-		double probability = 1;
+		double spawnThreshold = 0.8;
+		double probability = (double) skyWorldConfig.getDynamicDecorationProperty(getName(), "spawnChance").get(worldRef);
 
-		return random.nextDouble() <= probability && terrainTester.noise(x, y, z, landFrequency, landAmplitude, true) <= spawnThreshold;
-	}
-
-	@Override
-	public String getSchematicName() {
-//		return "airship";
-		return "fantasy_med_1";
+		return random.nextDouble() <= probability && terrainTester.noise(x, y, z, landFrequency, landAmplitude, true) >= spawnThreshold;
 	}
 }

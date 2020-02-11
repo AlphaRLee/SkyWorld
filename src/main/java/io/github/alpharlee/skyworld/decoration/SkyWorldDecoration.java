@@ -1,18 +1,13 @@
 package io.github.alpharlee.skyworld.decoration;
 
-import io.github.alpharlee.skyworld.SkyTerrainGenerator;
 import io.github.alpharlee.skyworld.SkyWorld;
 import io.github.alpharlee.skyworld.SkyWorldConfig;
 import nl.rutgerkok.worldgeneratorapi.WorldRef;
 import nl.rutgerkok.worldgeneratorapi.decoration.Decoration;
 import nl.rutgerkok.worldgeneratorapi.decoration.DecorationArea;
-import nl.rutgerkok.worldgeneratorapi.property.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public abstract class SkyWorldDecoration implements Decoration{
@@ -30,8 +25,13 @@ public abstract class SkyWorldDecoration implements Decoration{
 		this.skyWorldConfig = skyWorldConfig;
 	}
 
-	protected void spawn(DecorationArea area, int x, int y, int z) {
+	protected void spawn(int x, int y, int z) {
+		spawn(x, y, z, Math.floor(Math.random() * 4) * 90);
+	}
+
+	protected void spawn(int x, int y, int z, double angle) {
 		DecorationData data = new DecorationData(worldRef, getSchematicName(), x, y, z);
+		data.setAngle(angle);
 
 		SpawnDecorationRunnable runnable = new SpawnDecorationRunnable(Bukkit.getWorld(worldRef.getName()), data);
 		final long ONE_SECOND = 20l;

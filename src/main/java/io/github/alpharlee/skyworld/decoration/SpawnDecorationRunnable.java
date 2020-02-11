@@ -34,7 +34,9 @@ public class SpawnDecorationRunnable extends BukkitRunnable {
 			return;
 		}
 
-		SkyWorld.getInstance().getDecorationManager().pasteSchematic(decorationData.schematicName, world, decorationData.x, decorationData.y, decorationData.z);
+		SkyWorld.getInstance().getDecorationManager().pasteSchematic(decorationData.schematicName, world,
+				decorationData.x, decorationData.y, decorationData.z,
+				decorationData.angle);
 
 		this.cancel();
 	}

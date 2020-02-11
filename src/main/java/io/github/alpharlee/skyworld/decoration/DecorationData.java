@@ -8,6 +8,7 @@ public class DecorationData {
 	public int x;
 	public int y;
 	public int z;
+	public double angle = 0;
 
 	public DecorationData(WorldRef worldRef, String schematicName, int x, int y, int z) {
 		this.worldRef = worldRef;
@@ -15,5 +16,9 @@ public class DecorationData {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+	}
+
+	public void setAngle(double angle) {
+		this.angle = angle;
 	}
 }
