@@ -12,6 +12,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SkyWorldConfig {
 	private Map<String, DecorationSettings> decorationSettingsMap;
@@ -100,6 +101,18 @@ public class SkyWorldConfig {
 		List<Map<String, Object>> rawDecorationSettings = readRawDecorationSettings();
 		rawDecorationSettings.add(settings.serialize());
 		writeRawDecorationSettings(rawDecorationSettings);
+
+		SkyWorld.getInstance().saveConfig();
+	}
+
+	public void removeDecorationSettings(DecorationSettings settings) {
+		decorationSettingsMap.remove(settings.name.toLowerCase());
+
+		List<Map<String, Object>> rawDecorationSettings = readRawDecorationSettings();
+		writeRawDecorationSettings(rawDecorationSettings.stream()
+				.filter(e -> !e.get("name").equals(settings.name))
+				.collect(Collectors.toList())
+		);
 
 		SkyWorld.getInstance().saveConfig();
 	}

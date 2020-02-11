@@ -19,9 +19,9 @@ land:
   amplitude: 0.7
   threshold: 0.4
 decorations:
-  - name: airship
+  - name: platform
     type: air
-    schematic: fantasy_house_med_1
-    spawnChance: 0.5
+    schematic: platform
+    spawnChance: 0.05
     spawnAttempts: 10
 
