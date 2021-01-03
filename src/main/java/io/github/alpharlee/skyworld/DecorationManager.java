@@ -48,12 +48,11 @@ public class DecorationManager {
 	private final String schematicsDirName;
 
 	public DecorationManager(final String schematicsDirName) {
-		schematicsDirName.replace("/", File.separator).replace("\\", File.separator);
-		this.schematicsDirName = schematicsDirName + File.separator;
+		this.schematicsDirName = schematicsDirName.replace("/", File.separator).replace("\\", File.separator) + File.separator;
 	}
 
 	public void pasteSchematic(String schematicName, World world, int x, int y, int z, double angle) {
-		com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);;
+		com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);
 
 		File schemFile = new File(schematicsDirName + schematicName + ".schem");
 

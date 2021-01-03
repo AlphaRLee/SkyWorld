@@ -6,7 +6,7 @@
 
     <groupId>io.github.alpharlee</groupId>
     <artifactId>SkyWorld</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <name>Sky World</name>
@@ -64,8 +64,8 @@
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>rutger-repo</id>
-            <url>http://rutgerkok.nl/repo</url>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
         </repository>
         <repository>
             <id>enginehub-maven</id>
@@ -77,19 +77,19 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.15.1-R0.1-SNAPSHOT</version>
+            <version>1.16.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>nl.rutgerkok</groupId>
             <artifactId>worldgeneratorapi</artifactId>
-            <version>0.3</version>
+            <version>1.1.2</version>
             <scope>provided</scope> <!-- Important, otherwise WorldGeneratorApi will be placed in your JAR file if you're using maven-shade-plugin -->
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
-            <version>7.1.0-SNAPSHOT</version>
+            <version>7.2.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
